@@ -3,21 +3,25 @@ package pantallas.visualInterface;
 import info.Info;
 import pantallas.PantallaJuego;
 import processing.core.PImage;
+import red.ComunicacionCliente;
 import setup.Interfaz;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class Menu extends Interfaz implements Observer{
+public class MenuC extends Interfaz implements Observer {
 
     PantallaJuego j;
     private PImage dUno;
-    private int pDecision = 0;
+    private int pDecision = -1;
     private int dUnoSeleccionado = 0;
     private PImage[] imLlaves;
     private int turnoActual = 0;
+    private boolean ready;
+    private ComunicacionCliente c;
+    private boolean recomendado = false;
 
-    public Menu(PantallaJuego pantallaJuego) {
+    public MenuC(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
     }
 
@@ -25,10 +29,11 @@ public class Menu extends Interfaz implements Observer{
     public void iniciar() {
         iniImgs();
         app.imageMode(app.CORNER);
+        c = ComunicacionCliente.getInstance();
     }
 
     public void iniImgs() {
-        dUno = app.loadImage("data/pantallaJuego/menu/d1/d1.png");
+        dUno = app.loadImage("../data/pantallaJuego/menu/d1/d1.png");
 
 
     }
@@ -36,31 +41,36 @@ public class Menu extends Interfaz implements Observer{
     @Override
     public void pintar() {
 
+        //      if (!ready)
+
         app.translate(0, 0);
         app.imageMode(app.CORNER);
 
         switch (pDecision) {
+
+            case -1:
+                app.text("sincronizando con el otro jugador", 800, 50);
+                System.out.println();
+                c.enviar("ready");
+                break;
+
             case 0:
                 app.text("aqui va una explicacion de la interaccion", 800, 50);
                 break;
 
             case 1:
                 dUno();
-
                 break;
 
             case 2:
-
-//                if (la informacion del otro jugador ya llego){
-//                pDecision++
-                //}
-
                 app.text("esperando sugerencia del companero aparentemente", 800, 50);
+                if (recomendado) pDecision++;
 
                 break;
 
 
             case 3:
+
                 break;
         }
 
@@ -92,25 +102,23 @@ public class Menu extends Interfaz implements Observer{
             int x = 792 + (i * 336), y = 593;
 
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
-
-
                 System.out.println(" se ha seleccionado la llave " + i);
                 dUnoSeleccionado = i;
 
                 //PRUEBA!
-                j.setRecomendacionOtroJugador(i);
+                ComunicacionCliente.getInstance().enviar("recomendacion:" + i);
+                //  j.setRecomendacionOtroJugador(i);
 
                 pDecision++;
                 j.setDecidir(true);
                 break;
-
             }
         }
     }
 
     @Override
     public void mousePressed() {
-        System.out.println("se ha presionado el mouseMenu");
+     //   System.out.println("se ha presionado el mouseMenu");
         switch (pDecision) {
 
             case 0:
@@ -122,10 +130,13 @@ public class Menu extends Interfaz implements Observer{
                 break;
 
             case 2:
-                pDecision++;
+
                 break;
 
             case 3:
+                if (j.selecnuevoCamino())
+                    //      pDecision = 0;
+                    pDecision++;
                 break;
 
         }
@@ -133,7 +144,6 @@ public class Menu extends Interfaz implements Observer{
 
     @Override
     public void KeyPressed() {
-
         turnoActual++;
     }
 
@@ -144,8 +154,23 @@ public class Menu extends Interfaz implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("respC!");
+        String res = (String) arg;
+        String[] resp = res.split(":");
 
+        switch (resp[0]) {
+            case "ready":
+                if (!ready) {
+                    ready = true;
+                    pDecision++;
+                }
+                break;
 
+            case "recomendacion":
+                recomendado = true;
+                j.setRecomendacionOtroJugador(Integer.parseInt(resp[1]));
+                break;
+        }
 
     }
 }

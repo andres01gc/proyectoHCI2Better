@@ -203,7 +203,7 @@ public class Hexagon {
             if (app.dist(app.mouseX, app.mouseY, x + xVecino, y + yVecino) < ancho / 2) {
                 this.selected = false;
                 Hexagon h = new Hexagon(j, xReal + xVecino, yReal + yVecino, radio, 0, i);
-                System.out.println("se ha seleccionado, se supone!!!");
+              //  System.out.println("se ha seleccionado, se supone!!!");
                 return h;
             }
 

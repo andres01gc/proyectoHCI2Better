@@ -17,7 +17,7 @@ public class MainServer extends PApplet {
 
 	// metodo para poder exportarse como una aplicaci�n, NO TOCAR
 	static public void main(String[] passedArgs) {
-		String[] appletArgs = new String[] { "root.server.MainServer" };
+		String[] appletArgs = new String[]{"root.server.MainServer"};
 		if (passedArgs != null) {
 			PApplet.main(concat(appletArgs, passedArgs));
 		} else {
@@ -26,7 +26,7 @@ public class MainServer extends PApplet {
 	}
 
 	public void settings() {
-		 fullScreen(FX2D);
+		fullScreen(FX2D);
 		//size(1920, 1080,FX2D);
 		smooth();
 
@@ -40,7 +40,7 @@ public class MainServer extends PApplet {
 
 		Pantalla.app = this;
 		//app = this;
-		logica = new Logica(this,0);
+		logica = new Logica(this, 0);
 
 	}
 
@@ -76,12 +76,4 @@ public class MainServer extends PApplet {
 		}
 		logica.keyPressed();
 	}
-
-//	public static PApplet getApp() {
-//		return app;
-//	}
-//
-//	public static void setApp(PApplet app) {
-//		MainServer.app = app;
-//	}
 }

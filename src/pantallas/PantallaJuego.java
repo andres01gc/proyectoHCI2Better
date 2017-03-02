@@ -6,7 +6,8 @@ import java.util.Collections;
 import juego.Hexagon;
 import juego.Jugador;
 import juego.Llave;
-import pantallas.visualInterface.Menu;
+import pantallas.visualInterface.MenuC;
+import pantallas.visualInterface.MenuS;
 import red.ComunicacionCliente;
 import red.ComunicacionServidor;
 import root.Logica;
@@ -17,7 +18,7 @@ public class PantallaJuego extends Pantalla {
 
     Jugador j;
     float angle;
-    int cantidadAleatorio = 0;
+    int cantidadAleatorio = 2;
     int cantidadRondas = 4;//VARIABLE INDEPENDIENTE
     int rondaActual = 1;
 
@@ -33,7 +34,7 @@ public class PantallaJuego extends Pantalla {
     // posiciones que se usarán para pintar en el centro
     private float xCenter;
     private float yCenter;
-    private boolean tomoDesicion;
+    private boolean desicionRumboLlaves;
     private Llave l;
     private boolean decidir = false;
 
@@ -42,27 +43,24 @@ public class PantallaJuego extends Pantalla {
 
 
     public void iniciar() {
+        app.saveStrings("../data/saves/server.txt", new String[]{"hey", "holi", "hey"});
 
         //inicializa la interfaz grafica de MENU!!!!
 
 
-        Menu m = new Menu(this);
-
         if (Logica.getTipoJ() == 0) {
             //JUGADOR SERVER!
-
+            MenuS m = new MenuS(this);
             ComunicacionServidor.getInstance().addObserver(m);
-            System.out.println("SERAAAAAAAAAAA NOTFICADO POR EL SERVDIDOR");
+            AdministradorPantalla.cambiarInterfaz(m);
         }
         if (Logica.getTipoJ() == 1) {
             //JUGADOR CLIENT!
+            MenuC m = new MenuC(this);
             ComunicacionCliente.getInstance().addObserver(m);
-            System.out.println("SERAAAAAAAAAAA NOTFICADO POR EL CLIENTE");
+            AdministradorPantalla.cambiarInterfaz(m);
 
         }
-
-
-        AdministradorPantalla.cambiarInterfaz(m);
 
 
         crearMatrix(0, 0, 1, 1, 250);
@@ -78,8 +76,9 @@ public class PantallaJuego extends Pantalla {
         pintarHexagonos();
         pintarJugador();
 
-        if (decidir && recomendacionOtroJugador != -1)
-            decisionRandom();
+        //if (decidir && recomendacionOtroJugador != -1) {
+        decisionRandom();
+        //  }
 
         pintarLLave();
     }
@@ -114,26 +113,31 @@ public class PantallaJuego extends Pantalla {
     public void decisionRandom() {
 
         if (j.llego()) {
+
+            System.out.println("LLEGA!");
             if (cantidadAleatorio > 0) {
-                cantidadAleatorio--;
+                  cantidadAleatorio--;
 
                 if (cantidadAleatorio == 0) {
                     System.out.println("llego a una decision!");
                     int type;
-                    if (tomoDesicion) {
+                    if (false) {
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         type = 2;
                         l = new Llave(0);
+                        desicionRumboLlaves = !desicionRumboLlaves;
 
                         rondaActual++;
 
-                        // tomoDesicion=false;
+                        // desicionRumboLlaves=false;
                     } else {
                         type = 1;
-                        //   tomoDesicion=true;
+                        //   desicionRumboLlaves=true;
                     }
-                    tomoDesicion = !tomoDesicion;
+
                     hexaganoSeleccionado.seleccionAleatoria(type);
                 } else {
+
                     hexaganoSeleccionado.seleccionAleatoria(0);
                 }
             } else {
@@ -163,23 +167,27 @@ public class PantallaJuego extends Pantalla {
 
     @Override
     public void mousePressed() {
-        if (decidir && recomendacionOtroJugador != -1)
-            selecnuevoCamino();
+        //  if (decidir && recomendacionOtroJugador != -1)
+        // selecnuevoCamino();
     }
 
 
-    public void selecnuevoCamino() {
+    public boolean selecnuevoCamino() {
         //     System.out.println("hey!");
         //cuando se selecciona un camino nuevo.
         if (j.llego() && cantidadAleatorio == 0) {
             Hexagon h = hexaganoSeleccionado.seleccionarVecino();
-
             if (h != null) {
-                cantidadAleatorio = 1;
+                cantidadAleatorio = 4;
                 hexaganoSeleccionado = h;
                 hexagons.add(hexaganoSeleccionado);
+                desicionRumboLlaves = true;
+                recomendacionOtroJugador = -1;
+                decidir = true;
+                return true;
             }
         }
+        return false;
     }
 
     public void pintarJugador() {

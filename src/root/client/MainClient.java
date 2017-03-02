@@ -76,12 +76,5 @@ public class MainClient extends PApplet {
 		}
 		logica.keyPressed();
 	}
-//
-//	public static PApplet getApp() {
-//		return app;
-//	}
-//
-//	public static void setApp(PApplet app) {
-//		MainClient.app = app;
-//	}
+
 }
