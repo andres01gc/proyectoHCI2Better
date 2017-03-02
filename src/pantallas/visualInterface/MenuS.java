@@ -20,6 +20,8 @@ public class MenuS extends Interfaz implements Observer {
     private ComunicacionServidor c;
     private boolean readdy;
     private boolean recomendado;
+    private int decisionRecomendado;
+    private PImage d2;
 
     public MenuS(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
@@ -33,12 +35,12 @@ public class MenuS extends Interfaz implements Observer {
 
     public void iniImgs() {
         dUno = app.loadImage("data/pantallaJuego/menu/d1/d1.png");
+        d2 = app.loadImage("../data/pantallaJuego/menu/d1/d2.png");
         c = ComunicacionServidor.getInstance();
     }
 
     @Override
     public void pintar() {
-
         app.translate(0, 0);
         app.imageMode(app.CORNER);
 
@@ -54,22 +56,22 @@ public class MenuS extends Interfaz implements Observer {
 
             case 1:
                 dUno();
-
                 break;
 
             case 2:
-
-//                if (la informacion del otro jugador ya llego){
-//                pDecision++
-                //}
-
                 app.text("esperando sugerencia del companero aparentemente", 800, 50);
+                if (recomendado) pDecision++;
 
                 break;
-
 
             case 3:
+                pintarRecomendacion();
                 break;
+
+            case 4:
+
+                break;
+
         }
 
     }
@@ -94,6 +96,13 @@ public class MenuS extends Interfaz implements Observer {
         }
     }
 
+    private void pintarRecomendacion() {
+        app.imageMode(app.CENTER);
+        app.image(d2, app.width / 2, 150);
+
+        app.ellipse((app.width / 2), 150 + 23, 110, 110);
+        app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(turnoActual)[decisionRecomendado]], (app.width / 2), 150 + 23);
+    }
 
     void clickdUno() {
         for (int i = 0; i < 2; i++) {
@@ -120,7 +129,7 @@ public class MenuS extends Interfaz implements Observer {
 
     @Override
     public void mousePressed() {
-     //   System.out.println("se ha presionado el mouseMenu");
+        //   System.out.println("se ha presionado el mouseMenu");
         switch (pDecision) {
 
             case 0:
@@ -137,10 +146,10 @@ public class MenuS extends Interfaz implements Observer {
                 break;
 
             case 3:
-                if (j.selecnuevoCamino()) {
-                   // pDecision = 0;
-                }
-               pDecision++;
+//                if (j.selecnuevoCamino()) {
+//                    // pDecision = 0;
+//                }
+//                pDecision++;
                 break;
 
         }
@@ -175,7 +184,9 @@ public class MenuS extends Interfaz implements Observer {
 
             case "recomendacion":
                 recomendado = true;
-                j.setRecomendacionOtroJugador(Integer.parseInt(resp[1]));
+
+                decisionRecomendado = Integer.parseInt(resp[1]);
+                j.setRecomendacionOtroJugador(decisionRecomendado);
                 break;
 
         }

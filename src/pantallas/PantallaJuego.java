@@ -71,16 +71,18 @@ public class PantallaJuego extends Pantalla {
 
 
     public void pintar() {
-        app.background(45);
-        fixCenter();
-        pintarHexagonos();
-        pintarJugador();
 
-        //if (decidir && recomendacionOtroJugador != -1) {
-        decisionRandom();
-        //  }
+//        app.background(45);
+//        fixCenter();
+//        pintarHexagonos();
+//        pintarJugador();
+//
+//        if (decidir && recomendacionOtroJugador != -1) {
+//            decisionRandom();
+//        }
+//
+//        pintarLLave();
 
-        pintarLLave();
     }
 
 
@@ -116,7 +118,7 @@ public class PantallaJuego extends Pantalla {
 
             System.out.println("LLEGA!");
             if (cantidadAleatorio > 0) {
-                  cantidadAleatorio--;
+                cantidadAleatorio--;
 
                 if (cantidadAleatorio == 0) {
                     System.out.println("llego a una decision!");
