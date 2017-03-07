@@ -1,13 +1,11 @@
 package red;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Observable;
 
-public class ComunicacionServidor extends Observable implements Runnable{
+public class ComunicacionC extends Observable implements Runnable{
 
 	/*
 	 * En data archivos con opciones de puestas, el servidor escoje con cual
@@ -20,9 +18,10 @@ public class ComunicacionServidor extends Observable implements Runnable{
 	private int turno;
 	private int turnoOtroJugador;
 	private boolean turnoActivo;
-	private static ComunicacionServidor c;
+	private static ComunicacionC c;
 
-	private ComunicacionServidor(int i) {
+
+	private ComunicacionC(int i) {
 
 
 		new Thread(new Runnable() {
@@ -50,9 +49,9 @@ public class ComunicacionServidor extends Observable implements Runnable{
 		new Thread(this).start();
 	}
 
-	public static ComunicacionServidor getInstance() {
+	public static ComunicacionC getInstance() {
 		if (c == null) {
-			c = new ComunicacionServidor(6001);
+			c = new ComunicacionC(6001);
 		}
 		return c;
 	}

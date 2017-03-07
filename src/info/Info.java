@@ -24,9 +24,10 @@ public class Info {
     public static PImage[] imasLlavesMenu;
     public ArrayList<int[]> datossLlavesMenu;
     public static PImage barraVida;
+    public static int[] respuestasCorrectas;
+
 
     public void iniDatosLlavesMenu() {
-
         //cada uno representa la combinacion de llaves, estas deberian de ser aleatorias pero sin repetir.
         //el tamano del arreglo representa la cantidad de turnos.
         datossLlavesMenu = new ArrayList<int[]>();
@@ -34,7 +35,7 @@ public class Info {
         datossLlavesMenu.add(new int[]{1, 0});
         datossLlavesMenu.add(new int[]{0, 1});
         datossLlavesMenu.add(new int[]{1, 0});
-
+        respuestasCorrectas = new int[]{ 0, 1, 0, 1, 0  };
     }
 
     private Info() {

@@ -8,8 +8,8 @@ import juego.Hexagon;
 import juego.Jugador;
 import juego.Llave;
 import pantallas.visualInterface.Menu;
-import red.ComunicacionCliente;
-import red.ComunicacionServidor;
+import red.ComunicacionS;
+import red.ComunicacionC;
 import root.Logica;
 import setup.AdministradorPantalla;
 import setup.Pantalla;
@@ -32,13 +32,11 @@ public class PantallaJuego extends Pantalla {
     private Llave l;
     private boolean decidir = false;
     public int recomendacionOtroJugador = -1;
-
     private boolean decicion = false;
     private boolean esperandoDecision;
     private boolean vidaHilo = false;
-
     private boolean llaveCogida = false;
-
+    public int cuartoSeleccionado = -1;
 
     public boolean isLlaveCogida() {
         return llaveCogida;
@@ -69,13 +67,13 @@ public class PantallaJuego extends Pantalla {
         if (Logica.getTipoJ() == 0) {
             //JUGADOR SERVER!
             //  MenuS m = new MenuS(this);
-            ComunicacionServidor.getInstance().addObserver(m);
+            ComunicacionC.getInstance().addObserver(m);
             AdministradorPantalla.cambiarInterfaz(m);
         }
         if (Logica.getTipoJ() == 1) {
             //JUGADOR CLIENT!
             // Menu m = new Menu(this);
-            ComunicacionCliente.getInstance().addObserver(m);
+            ComunicacionS.getInstance().addObserver(m);
             AdministradorPantalla.cambiarInterfaz(m);
         }
 
@@ -220,6 +218,8 @@ public class PantallaJuego extends Pantalla {
 
     @Override
     public void mousePressed() {
+
+
 
     }
     //  cantidadAleatorio = 2;

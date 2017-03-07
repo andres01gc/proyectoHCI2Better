@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Observable;
 
-public class ComunicacionCliente extends Observable implements Runnable {
+public class ComunicacionS extends Observable implements Runnable {
 
     /*
      * En data archivos con opciones de puestas, el servidor escoje con cual
@@ -20,9 +20,9 @@ public class ComunicacionCliente extends Observable implements Runnable {
     private int turno;
     private int turnoOtroJugador;
     private boolean turnoActivo;
-    private static ComunicacionCliente c;
+    private static ComunicacionS c;
 
-    private ComunicacionCliente(int i) {
+    private ComunicacionS(int i) {
 
         new Thread(new Runnable() {
             @Override
@@ -51,9 +51,9 @@ public class ComunicacionCliente extends Observable implements Runnable {
 
     }
 
-    public static ComunicacionCliente getInstance() {
+    public static ComunicacionS getInstance() {
         if (c == null) {
-            c = new ComunicacionCliente(6001);
+            c = new ComunicacionS(6001);
         }
         return c;
     }

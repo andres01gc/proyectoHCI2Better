@@ -3,15 +3,15 @@ package root;
 import info.Info;
 import pantallas.PantallaInicial;
 import processing.core.PApplet;
-import red.ComunicacionCliente;
-import red.ComunicacionServidor;
+import red.ComunicacionS;
+import red.ComunicacionC;
 import setup.AdministradorPantalla;
 
 public class Logica {
 
     private static int tipoJ;
     private static PApplet app;
-    ComunicacionServidor c;
+    ComunicacionC c;
 
 
     static public int getTipoJ() {
@@ -32,10 +32,10 @@ public class Logica {
 
         if (tipoDeJugador == 0)
             //JUGADOR SERVER!
-            ComunicacionServidor.getInstance();
+            ComunicacionC.getInstance();
         if (tipoDeJugador == 1)
             //JUGADOR CLIENT!
-            ComunicacionCliente.getInstance();
+            ComunicacionS.getInstance();
 
     }
 

@@ -239,7 +239,7 @@ public class Hexagon {
 
                 Hexagon h = new Hexagon(j, xReal + xVecino, yReal + yVecino, radio, 0, i);
                 System.out.println("se ha seleccionado la puerta " + numero);
-                j.recomendacionOtroJugador = numero;
+                j.cuartoSeleccionado = numero;
                 return h;
             }
 

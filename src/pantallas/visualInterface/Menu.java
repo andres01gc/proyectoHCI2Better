@@ -4,8 +4,8 @@ import info.Info;
 import pantallas.PantallaJuego;
 import processing.core.PImage;
 import processing.core.PVector;
-import red.ComunicacionCliente;
-import red.ComunicacionServidor;
+import red.ComunicacionS;
+import red.ComunicacionC;
 import root.Logica;
 import setup.Interfaz;
 
@@ -55,8 +55,8 @@ public class Menu extends Interfaz implements Observer {
         llave = app.loadImage("../data/pantallaJuego/menu/pruebaDeLlave/llave.png");
 
         resultadoRonda = new PImage[]{
-                app.loadImage("../data/pantallaJuego/menu/mala.png"),
-                app.loadImage("../data/pantallaJuego/menu/buena.png")
+                app.loadImage("../data/pantallaJuego/menu/buena.png"),
+                app.loadImage("../data/pantallaJuego/menu/mala.png")
         };
 
         esperando = app.loadImage("../data/pantallaJuego/esperando_conexion.png");
@@ -73,8 +73,9 @@ public class Menu extends Interfaz implements Observer {
 
 
                 if (Logica.getTipoJ() == 1) {
-                    ComunicacionCliente.getInstance().enviar("ready");
+                    ComunicacionS.getInstance().enviar("ready");
                 }
+
                 break;
 
             case 0:
@@ -114,7 +115,11 @@ public class Menu extends Interfaz implements Observer {
             //cuando gana
             case 6:
                 app.imageMode(app.CORNER);
-                app.image(resultadoRonda[j.recomendacionOtroJugador], 0, 0);
+                if (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]) {
+                    app.image(resultadoRonda[0], 0, 0);
+                } else {
+                    app.image(resultadoRonda[1], 0, 0);
+                }
                 break;
 
             //cuando pierde
@@ -144,13 +149,23 @@ public class Menu extends Interfaz implements Observer {
 
             int x = 792 + (i * 336), y = 593;
 
+            int val = Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[i];
+
+            app.strokeWeight(5);
+            if (val == Info.getInstance().respuestasCorrectas[j.getRondaActual()]) {
+                app.stroke(0, 255, 0);
+            } else {
+                app.stroke(255, 0, 0);
+            }
+
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
                 app.fill(45);
                 app.ellipse(x, y, 160, 160);
             }
 
             app.imageMode(app.CENTER);
-            app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[i]], x, y);
+            app.image(Info.imasLlavesMenu[val], x, y);
+
         }
     }
 
@@ -165,10 +180,10 @@ public class Menu extends Interfaz implements Observer {
 
                 //PRUEBA!
                 if (Logica.getTipoJ() == 1)
-                    ComunicacionCliente.getInstance().enviar("recomendacion:" + i);
+                    ComunicacionS.getInstance().enviar("recomendacion:" + i);
 
                 if (Logica.getTipoJ() == 0)
-                    ComunicacionServidor.getInstance().enviar("recomendacion:" + i);
+                    ComunicacionC.getInstance().enviar("recomendacion:" + i);
 
                 //  j.setRecomendacionOtroJugador(i);
 
@@ -294,7 +309,7 @@ public class Menu extends Interfaz implements Observer {
                     ready = true;
 
                     if (Logica.getTipoJ() == 0) {
-                        ComunicacionServidor.getInstance().enviar("ready");
+                        ComunicacionC.getInstance().enviar("ready");
                     }
                     pantalla++;
                 }
