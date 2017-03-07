@@ -20,10 +20,7 @@ public class ComunicacionC extends Observable implements Runnable{
 	private boolean turnoActivo;
 	private static ComunicacionC c;
 
-
 	private ComunicacionC(int i) {
-
-
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

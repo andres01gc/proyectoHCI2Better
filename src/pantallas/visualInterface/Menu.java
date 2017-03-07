@@ -4,6 +4,8 @@ import info.Info;
 import pantallas.PantallaJuego;
 import processing.core.PImage;
 import processing.core.PVector;
+import processing.data.Table;
+import processing.data.TableRow;
 import red.ComunicacionS;
 import red.ComunicacionC;
 import root.Logica;
@@ -25,14 +27,14 @@ public class Menu extends Interfaz implements Observer {
     private PImage d2;
     private int decisionRecomendado;
     private PVector posLlaveCogida;
-
     private PImage fondoPruebaSeleccion;
     private PImage llave;
     private boolean llaveCogida;
     PImage[] resultadoRonda;
     private PImage esperando;
-
     private int indiceConfianza = 0;
+    private Table table;
+    private TableRow newRow;
 
     public Menu(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
@@ -62,6 +64,24 @@ public class Menu extends Interfaz implements Observer {
         };
 
         esperando = app.loadImage("../data/pantallaJuego/esperando_conexion.png");
+
+        loadTable();
+    }
+
+
+    public void loadTable() {
+        if (Logica.getTipoJ() == 0) {
+            table = app.loadTable("../data/saves/datosS.csv", "header");
+
+        }else{
+            table = app.loadTable("../data/saves/datosC.csv", "header");
+        }
+
+        newRow = table.addRow();
+
+        newRow.setInt("id", table.getRowCount() - 1);
+        newRow.setInt("energia inicial", j.energia);
+
     }
 
     @Override
@@ -206,9 +226,14 @@ public class Menu extends Interfaz implements Observer {
 
                 if (i == Info.respuestasCorrectas[j.getRondaActual()]) {
                     envio("confianza:" + 25);
+                    newRow.setInt("Honestidad R"+j.getRondaActual(), 25);
+
                     indiceConfianza += 25;
                 } else {
+                    newRow.setInt("Honestidad R"+j.getRondaActual(), 0);
+
                     envio("confianza:" + 0);
+
                 }
 
 
@@ -244,8 +269,10 @@ public class Menu extends Interfaz implements Observer {
 
                 if (j.cuartoSeleccionado == j.recomendacionOtroJugador) {
                     envio("confianza:" + 25);
+                    newRow.setInt("conviccion R"+j.getRondaActual(), 25);
                     indiceConfianza += 25;
                 } else {
+                    newRow.setInt("conviccion R"+j.getRondaActual(), 0);
                     envio("confianza:" + 0);
                 }
 
@@ -325,6 +352,16 @@ public class Menu extends Interfaz implements Observer {
                 if (llaveCogida) {
                     if (app.dist(app.mouseX, app.mouseY, 616, 616) < 100) {
                         pantalla = 6;
+                        newRow.setInt("indiceConfianza R"+j.getRondaActual(), indiceConfianza);
+
+                        //prueba de la primera ronda
+                        
+                        if (Logica.getTipoJ() == 0) {
+                            app.saveTable(table, "../data/saves/datosS.csv");
+
+                        }else{
+                            app.saveTable(table, "../data/saves/datosC.csv");
+                        }
                     }
                 }
                 llaveCogida = false;

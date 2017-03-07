@@ -15,7 +15,7 @@ import setup.AdministradorPantalla;
 import setup.Pantalla;
 
 public class PantallaJuego extends Pantalla {
-    int vida = 80;
+   public int energia = 80;
     Jugador j;
     float angle;
     int cantidadAleatorio = 2;
@@ -32,8 +32,7 @@ public class PantallaJuego extends Pantalla {
     private Llave l;
     private boolean decidir = false;
     public int recomendacionOtroJugador = -1;
-    private boolean decicion = false;
-    private boolean esperandoDecision;
+
     private boolean vidaHilo = false;
     private boolean llaveCogida = false;
     public int cuartoSeleccionado = -1;
@@ -44,13 +43,13 @@ public class PantallaJuego extends Pantalla {
 
     public void pintaBarra() {
         app.imageMode(app.CORNER);
-        float bufferBarra = app.map(vida, 0, 100, 0, 304);
+        float bufferBarra = app.map(energia, 0, 100, 0, 304);
 
-        if (vida <= 20) {
+        if (energia <= 20) {
             app.fill(244, 55, 55);
-        } else if (vida <= 60) {
+        } else if (energia <= 60) {
             app.fill(247, 236, 52);
-        } else if (vida <= 100) {
+        } else if (energia <= 100) {
             app.fill(112, 108, 61);
         }
         app.rect(94, 67, bufferBarra, 71);
