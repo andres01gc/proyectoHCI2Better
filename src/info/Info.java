@@ -9,6 +9,11 @@ public class Info {
     static PApplet app = Pantalla.app;
     private static Info info;
 
+
+    public static int vidaClient = 80;
+    public static int vidaServer = 30;
+
+    public static int rondaActual = 0;
     public static PImage PLAYER;
     public static PImage[] imasHexRandom;
     public static PImage[] imasHexDes;
@@ -35,7 +40,7 @@ public class Info {
         datossLlavesMenu.add(new int[]{1, 0});
         datossLlavesMenu.add(new int[]{0, 1});
         datossLlavesMenu.add(new int[]{1, 0});
-        respuestasCorrectas = new int[]{ 0, 1, 0, 1, 0  };
+        respuestasCorrectas = new int[]{0, 1, 0, 1, 0};
     }
 
     private Info() {

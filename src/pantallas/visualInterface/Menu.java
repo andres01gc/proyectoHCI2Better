@@ -9,6 +9,7 @@ import processing.data.TableRow;
 import red.ComunicacionS;
 import red.ComunicacionC;
 import root.Logica;
+import setup.AdministradorPantalla;
 import setup.Interfaz;
 
 import java.util.Observable;
@@ -35,6 +36,7 @@ public class Menu extends Interfaz implements Observer {
     private int indiceConfianza = 0;
     private Table table;
     private TableRow newRow;
+    private PImage imaFin;
 
     public Menu(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
@@ -65,6 +67,8 @@ public class Menu extends Interfaz implements Observer {
 
         esperando = app.loadImage("../data/pantallaJuego/esperando_conexion.png");
 
+
+        imaFin = app.loadImage("../data/pantallaJuego/final.png");
         loadTable();
     }
 
@@ -95,8 +99,6 @@ public class Menu extends Interfaz implements Observer {
         switch (pantalla) {
             case -1:
                 app.image(esperando, 0, 0);
-
-
                 if (Logica.getTipoJ() == 1) {
                     ComunicacionS.getInstance().enviar("ready");
                 }
@@ -104,7 +106,8 @@ public class Menu extends Interfaz implements Observer {
                 break;
 
             case 0:
-                app.text("¿aqui va una explicacion de la interaccion?", 800, 50);
+                //    app.text("¿aqui va una explicacion de la interaccion?", 800, 50);
+                pantalla++;
                 break;
 
             case 1:
@@ -123,7 +126,7 @@ public class Menu extends Interfaz implements Observer {
                 break;
 
             case 4:
-                app.text("esperando a que llegue", 800, 50);
+                //      app.text("esperando a que llegue", 800, 50);
                 if (j.isLlaveCogida()) pantalla++;
                 break;
 
@@ -167,7 +170,9 @@ public class Menu extends Interfaz implements Observer {
 
             //pintar Barras de confianza
             case 7:
-                app.text("se acabo todo", 50, 50);
+                app.imageMode(app.CORNER);
+                app.image(imaFin, 0, 0);
+
                 break;
 
             case 8:
@@ -206,8 +211,11 @@ public class Menu extends Interfaz implements Observer {
     }
 
     private void pintarRecomendacion() {
+        System.out.println(app.mouseX + "     " + app.mouseY);
+
+        app.fill(0, 30);
         app.imageMode(app.CENTER);
-        app.image(d2, app.width / 2, 150);
+        app.image(d2, 915, 140);
 
         app.ellipse((app.width / 2), 150 + 23, 110, 110);
         app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
@@ -221,7 +229,8 @@ public class Menu extends Interfaz implements Observer {
      */
     public void elegirRecomendacion() {
         app.noStroke();
-        app.image(dUno, 0, 0);
+        app.image(dUno, 543, 437);
+
         for (int i = 0; i < 2; i++) {
 
             int x = 792 + (i * 336), y = 593;
@@ -280,6 +289,14 @@ public class Menu extends Interfaz implements Observer {
 
                 pantalla++;
                 j.setDecidir(true);
+
+
+                if (Logica.getTipoJ() == 0) {
+                    Info.vidaClient -= 10;
+                } else {
+                    Info.vidaServer -= 10;
+                }
+
                 break;
             }
         }
@@ -332,20 +349,17 @@ public class Menu extends Interfaz implements Observer {
             case 6:
 
 
-//                pantalla = -1;
-//                ready = false;
-//                j.setRondaActual(j.getRondaActual() + 1);
-//                j.recomendacionOtroJugador = -1;
-//                indiceConfianza = 0;
-//                j.reiniciar();
-//
-//                if (j.getRondaActual() == 4) {
-//                    pantalla = 7;
-//                }
+                if (Info.rondaActual < 3) {
+                    Info.rondaActual++;
+
+                    AdministradorPantalla.cambiarPantalla(new PantallaJuego());
+                } else {
+                    pantalla = 7;
+                }
 
                 break;
             case 7:
-
+                app.exit();
                 //  pantalla++;
                 break;
 

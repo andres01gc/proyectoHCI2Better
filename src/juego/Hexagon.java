@@ -183,13 +183,11 @@ public class Hexagon {
 
     public void drawRecomendaciones(int turno, int recomendacion) {
         float angle = app.TWO_PI / 6;
-
-
+        
         for (int var = 0, numero = 0; var < datosHexSelected.get(tipoTunel).length; var++) {
             int i = datosHexSelected.get(tipoTunel)[var] + anguloTunel;
             if (i > 6)
                 i -= 6;
-
 
             // bloquea seleccionar las misma por la que entraste.
             if (i == ladoEntrada)
@@ -208,7 +206,7 @@ public class Hexagon {
             dHexagon(x + xVecino, y + yVecino);
             app.fill(0);
             app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[numero]], x + xVecino, y + yVecino);
-            app.text(numero, x + xVecino + 50, y + yVecino);
+            //app.text(numero, x + xVecino + 50, y + yVecino);
             numero++;
         }
     }

@@ -15,12 +15,12 @@ import setup.AdministradorPantalla;
 import setup.Pantalla;
 
 public class PantallaJuego extends Pantalla {
-    public int energia = 80;
+    public int energia = 0;
     Jugador j;
     float angle;
     int cantidadAleatorio = 2;
     int cantidadRondas = 4;//VARIABLE INDEPENDIENTE
-    int rondaActual = 0;
+    int rondaActual = Info.rondaActual;
 
     ArrayList<Hexagon> hexagons = new ArrayList<>();
 
@@ -37,21 +37,29 @@ public class PantallaJuego extends Pantalla {
     private boolean llaveCogida = false;
     public int cuartoSeleccionado = -1;
 
+
     public boolean isLlaveCogida() {
         return llaveCogida;
     }
 
+
     public void pintaBarra() {
+        app.noStroke();
         app.imageMode(app.CORNER);
         float bufferBarra = app.map(energia, 0, 100, 0, 304);
 
         if (energia <= 20) {
             app.fill(244, 55, 55);
-        } else if (energia <= 60) {
+        }
+
+        if (energia > 20) {
             app.fill(247, 236, 52);
-        } else if (energia <= 100) {
+        }
+
+        if (energia > 80) {
             app.fill(112, 108, 61);
         }
+        app.rectMode(app.CORNER);
         app.rect(94, 67, bufferBarra, 71);
         app.image(Info.getInstance().barraVida, 0, 0);
     }
@@ -81,6 +89,13 @@ public class PantallaJuego extends Pantalla {
         j = new Jugador(hexagons.get(0).getX(), hexagons.get(0).getY());
         hexaganoSeleccionado = hexagons.get(0);
         hexaganoSeleccionado.setSelected(true);
+
+
+        if (Logica.getTipoJ() == 0) {
+            energia = Info.vidaClient;
+        } else {
+            energia = Info.vidaServer;
+        }
     }
 
     public void reiniciar() {
@@ -104,6 +119,9 @@ public class PantallaJuego extends Pantalla {
 
         pintarHexagonosFront();
         pintaBarra();
+
+        app.fill(0);
+        app.text("ronda:  " + rondaActual, 100, 400);
     }
 
 
