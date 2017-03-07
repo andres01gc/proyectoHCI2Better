@@ -62,6 +62,9 @@ public class PantallaJuego extends Pantalla {
         app.rectMode(app.CORNER);
         app.rect(94, 67, bufferBarra, 71);
         app.image(Info.getInstance().barraVida, 0, 0);
+
+        app.fill(255);
+        app.text(energia+"%",246,106);
     }
 
     public void iniciar() {
