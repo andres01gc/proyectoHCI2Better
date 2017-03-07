@@ -121,7 +121,7 @@ PImage image;
 		this.vel = vel;
 	}
 
-	public boolean llego() {
+	public boolean llega() {
 		return (d<10);
 	}
 

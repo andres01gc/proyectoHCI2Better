@@ -3,11 +3,11 @@ package pantallas;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import info.Info;
 import juego.Hexagon;
 import juego.Jugador;
 import juego.Llave;
-import pantallas.visualInterface.MenuC;
-import pantallas.visualInterface.MenuS;
+import pantallas.visualInterface.Menu;
 import red.ComunicacionCliente;
 import red.ComunicacionServidor;
 import root.Logica;
@@ -15,7 +15,7 @@ import setup.AdministradorPantalla;
 import setup.Pantalla;
 
 public class PantallaJuego extends Pantalla {
-
+    int vida = 80;
     Jugador j;
     float angle;
     int cantidadAleatorio = 2;
@@ -23,68 +23,95 @@ public class PantallaJuego extends Pantalla {
     int rondaActual = 1;
 
     ArrayList<Hexagon> hexagons = new ArrayList<>();
-    private float fixNx;
-    private float fixNy;
 
     // hexagono donde se va a estar parado;
     private Hexagon hexaganoSeleccionado = null;
-    private int nPosX;
-    private int nPosY;
-
     // posiciones que se usarán para pintar en el centro
     private float xCenter;
     private float yCenter;
-    private boolean desicionRumboLlaves;
     private Llave l;
     private boolean decidir = false;
+    public int recomendacionOtroJugador = -1;
+
+    private boolean decicion = false;
+    private boolean esperandoDecision;
+    private boolean vidaHilo = false;
+
+    private boolean llaveCogida = false;
 
 
-    private int recomendacionOtroJugador = -1;
+    public boolean isLlaveCogida() {
+        return llaveCogida;
+    }
 
+    public void pintaBarra() {
+        app.imageMode(app.CORNER);
+        float bufferBarra = app.map(vida, 0, 100, 0, 304);
+
+        if (vida <= 20) {
+            app.fill(244, 55, 55);
+        } else if (vida <= 60) {
+            app.fill(247, 236, 52);
+        } else if (vida <= 100) {
+            app.fill(112, 108, 61);
+        }
+        app.rect(94, 67, bufferBarra, 71);
+        app.image(Info.getInstance().barraVida, 0, 0);
+    }
 
     public void iniciar() {
         app.saveStrings("../data/saves/server.txt", new String[]{"hey", "holi", "hey"});
 
         //inicializa la interfaz grafica de MENU!!!!
 
+        Menu m = new Menu(this);
 
         if (Logica.getTipoJ() == 0) {
             //JUGADOR SERVER!
-            MenuS m = new MenuS(this);
+            //  MenuS m = new MenuS(this);
             ComunicacionServidor.getInstance().addObserver(m);
             AdministradorPantalla.cambiarInterfaz(m);
         }
         if (Logica.getTipoJ() == 1) {
             //JUGADOR CLIENT!
-            MenuC m = new MenuC(this);
+            // Menu m = new Menu(this);
             ComunicacionCliente.getInstance().addObserver(m);
             AdministradorPantalla.cambiarInterfaz(m);
-
         }
 
-
-        crearMatrix(0, 0, 1, 1, 250);
+        crearMatrix(0, 0, 1, 1, 220);
         j = new Jugador(hexagons.get(0).getX(), hexagons.get(0).getY());
         hexaganoSeleccionado = hexagons.get(0);
         hexaganoSeleccionado.setSelected(true);
     }
 
-
     public void pintar() {
+        app.background(45);
+        fixCenter();
+        pintarHexagonos();
+        pintarJugador();
 
-//        app.background(45);
-//        fixCenter();
-//        pintarHexagonos();
-//        pintarJugador();
-//
-//        if (decidir && recomendacionOtroJugador != -1) {
-//            decisionRandom();
-//        }
-//
-//        pintarLLave();
+        //llegarAseleccion();
+        pintarLLave();
 
+
+        pintarHexagonosFront();
+        pintaBarra();
     }
 
+
+    public void pintarRecomendaciones() {
+        if (j.llega() && hexaganoSeleccionado.getTipoHex() == 1 && recomendacionOtroJugador != -1) {
+            hexaganoSeleccionado.drawRecomendaciones(rondaActual, recomendacionOtroJugador);
+        }
+    }
+
+    private void pintarHexagonosFront() {
+        for (int i = hexagons.size() - 1; i >= 0; i--) {
+            Hexagon h = hexagons.get(i);
+            h.pintarFront(xCenter, yCenter, j.getPos());
+        }
+    }
 
     // crea una matriz de hexagonos
     public void crearMatrix(int x, int y, int ancho, int alto, float radio) {
@@ -111,81 +138,103 @@ public class PantallaJuego extends Pantalla {
         yCenter = j.getPos().y - (app.height / 2);
     }
 
+    public void llegarAllave(Hexagon hEscogida) {
+        if (!vidaHilo) {
+            vidaHilo = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean first = true;
+                    while (vidaHilo) {
+                        if (j.llega()) {
 
-    public void decisionRandom() {
-
-        if (j.llego()) {
-
-            System.out.println("LLEGA!");
-            if (cantidadAleatorio > 0) {
-                cantidadAleatorio--;
-
-                if (cantidadAleatorio == 0) {
-                    System.out.println("llego a una decision!");
-                    int type;
-                    if (false) {
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                        type = 2;
-                        l = new Llave(0);
-                        desicionRumboLlaves = !desicionRumboLlaves;
-
-                        rondaActual++;
-
-                        // desicionRumboLlaves=false;
-                    } else {
-                        type = 1;
-                        //   desicionRumboLlaves=true;
+                            if (cantidadAleatorio >= 0) {
+                                if (cantidadAleatorio > 0) {
+                                    if (first) {
+                                        hexaganoSeleccionado.setSelected(false);
+                                        hexagons.add(hEscogida);
+                                        hexaganoSeleccionado = hEscogida;
+                                        first = false;
+                                    } else {
+                                        hexaganoSeleccionado.seleccionAleatoria(0);
+                                    }
+                                }
+                                if (cantidadAleatorio == 0) {
+                                    l = new Llave(0);
+                                    hexaganoSeleccionado.seleccionAleatoria(2);
+                                }
+                                cantidadAleatorio--;
+                            } else {
+                                vidaHilo = false;
+                            }
+                        }
+                        try {
+                            sleep(33);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    hexaganoSeleccionado.seleccionAleatoria(type);
-                } else {
-
-                    hexaganoSeleccionado.seleccionAleatoria(0);
                 }
-            } else {
-                hexaganoSeleccionado.drawRecomendaciones(rondaActual, recomendacionOtroJugador);
-            }
-
-        }
-
-        if (rondaActual == cantidadRondas) {
-            AdministradorPantalla.cambiarPantalla(new Explica());
+            }).start();
         }
     }
 
+    public void llegarAseleccion() {
+        if (!vidaHilo) {
+            vidaHilo = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (vidaHilo) {
+                        if (j.llega()) {
+                            if (cantidadAleatorio >= -0) {
+                                if (cantidadAleatorio > 0)
+                                    hexaganoSeleccionado.seleccionAleatoria(0);
+                                if (cantidadAleatorio == 0)
+                                    hexaganoSeleccionado.seleccionAleatoria(1);
+                                cantidadAleatorio--;
+                            }
+                        }
+                        try {
+                            sleep(33);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+        }
+    }
 
     public void pintarLLave() {
-        if (l != null) {
+        if (l != null && hexaganoSeleccionado.getTipoHex() == 2) {
             l.pintar(hexaganoSeleccionado);
 
             if (app.dist(j.getX(), j.getY(), l.getX(), l.getY()) < 10) {
                 System.out.println("se cogio la llave");
+                llaveCogida = true;
                 l = null;
             }
-
         }
-
     }
 
     @Override
     public void mousePressed() {
-        //  if (decidir && recomendacionOtroJugador != -1)
-        // selecnuevoCamino();
+
     }
+    //  cantidadAleatorio = 2;
 
-
+    //vidaHilo = true;
+    //llegarAllave();
     public boolean selecnuevoCamino() {
         //     System.out.println("hey!");
         //cuando se selecciona un camino nuevo.
-        if (j.llego() && cantidadAleatorio == 0) {
+        if (j.llega() && hexaganoSeleccionado.getTipoHex() == 1 && recomendacionOtroJugador != -1) {
             Hexagon h = hexaganoSeleccionado.seleccionarVecino();
             if (h != null) {
-                cantidadAleatorio = 4;
-                hexaganoSeleccionado = h;
-                hexagons.add(hexaganoSeleccionado);
-                desicionRumboLlaves = true;
-                recomendacionOtroJugador = -1;
-                decidir = true;
+                cantidadAleatorio = 2;
+                llegarAllave(h);
+                //  recomendacionOtroJugador = -1;
                 return true;
             }
         }
@@ -199,15 +248,12 @@ public class PantallaJuego extends Pantalla {
     }
 
     public void pintarHexagonos() {
-
-
         for (int i = hexagons.size() - 1; i >= 0; i--) {
             Hexagon h = hexagons.get(i);
             h.pintar(xCenter, yCenter, j.getPos());
 
             if (h.getVida() < 0)
                 hexagons.remove(h);
-
         }
     }
 
@@ -271,4 +317,5 @@ public class PantallaJuego extends Pantalla {
     public void setRecomendacionOtroJugador(int recomendacionOtroJugador) {
         this.recomendacionOtroJugador = recomendacionOtroJugador;
     }
+
 }

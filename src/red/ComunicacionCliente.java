@@ -25,7 +25,6 @@ public class ComunicacionCliente extends Observable implements Runnable {
     private ComunicacionCliente(int i) {
 
         new Thread(new Runnable() {
-
             @Override
             public void run() {
                 // TODO Auto-generated method stub

@@ -16,7 +16,6 @@ public class Llave {
 
     public Llave(int tipoLlave) {
         this.tipoLlave = tipoLlave;
-
     }
 
 
@@ -27,10 +26,11 @@ public class Llave {
 
         this.x = hSelected.getX();
         this.y = hSelected.getY();
+        hSelected.setSelected(true);
         app.fill(app.random(255), app.random(255), app.random(255));
         app.imageMode(app.CENTER);
-        app.image(Info.imasLlavesMapa[tipoLlave],x,y);
-        app.ellipse(x, y, 50, 50);
+        app.image(Info.imasLlavesMapa[tipoLlave], x, y);
+    //    app.ellipse(x, y, 50, 50);
 
 
     }

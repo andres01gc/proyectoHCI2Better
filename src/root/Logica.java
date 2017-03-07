@@ -60,7 +60,8 @@ public class Logica {
 
     public void mouseReleased() {
         if (AdministradorPantalla.getInterfazVisible() != null)
-            AdministradorPantalla.getInterfazVisible().mouseDragged();
+            AdministradorPantalla.getInterfazVisible().mouseReleased();
+
         AdministradorPantalla.getCurrentScreen().mouseReleased();
     }
 

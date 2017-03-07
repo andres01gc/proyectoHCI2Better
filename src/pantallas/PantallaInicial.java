@@ -10,7 +10,6 @@ public class PantallaInicial extends Pantalla {
 
     @Override
     public void iniciar() {
-        // TODO Auto-generated method stub
         app.textSize(50);
         inicializarImgs();
         app.textAlign(app.CENTER, app.CENTER);
@@ -18,28 +17,21 @@ public class PantallaInicial extends Pantalla {
 
     @Override
     public void pintar() {
-
         app.background(200);
         app.image(fondo, 0, 0);
-
-        app.text("presiona cualquier tecla para continuar", 960, 905);
     }
 
     @Override
     public void finalizar() {
-
     }
 
 
     public void inicializarImgs() {
-        fondo = app.loadImage("data/inicio/fondo.png");
-
-
+        fondo = app.loadImage("data/inicio/pantalla_inicio.png");
     }
 
     @Override
     public void mousePressed() {
-        // TODO Auto-generated method stub
         AdministradorPantalla.cambiarPantalla(new Instrucciones());
         super.mousePressed();
     }

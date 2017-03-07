@@ -23,7 +23,7 @@ public class Info {
 
     public static PImage[] imasLlavesMenu;
     public ArrayList<int[]> datossLlavesMenu;
-
+    public static PImage barraVida;
 
     public void iniDatosLlavesMenu() {
 
@@ -53,7 +53,7 @@ public class Info {
 
 
         iniciarLlavesMapa();
-
+        barraVida = app.loadImage("../data/pantallaJuego/vida.png");
     }
 
     public void iniDatosHexRandom() {
@@ -121,9 +121,10 @@ public class Info {
                 app.loadImage("data/pantallaJuego/llavesMapa/llave_1.png"),
                 app.loadImage("data/pantallaJuego/llavesMapa/llave_2.png"),
                 app.loadImage("data/pantallaJuego/llavesMapa/llave_3.png"),
-             //   app.loadImage("data/pantallaJuego/llavesMapa/llave_4.png")
+                //   app.loadImage("data/pantallaJuego/llavesMapa/llave_4.png")
         };
     }
+
     static public void iniciarHexLlaves() {
         imasHexLlaves = new PImage[]{
                 app.loadImage("data/pantallaJuego/hexagonos/llaves/ll1.png"),

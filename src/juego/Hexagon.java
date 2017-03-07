@@ -10,7 +10,7 @@ import processing.core.PVector;
 import setup.Pantalla;
 
 public class Hexagon {
-    private final int tipoHex;
+    private int tipoHex;
     private PApplet app = Pantalla.app;
 
     float xReal, yReal;
@@ -29,7 +29,7 @@ public class Hexagon {
     private float opa;
     private ArrayList<int[]> datosHexSelected;
     private float vida = 255;
-
+    private PImage pared;
 
     public Hexagon(PantallaJuego j, float x, float y, float radio, int tipoHex, int ladoEntrada) {
         this.j = j;
@@ -48,7 +48,10 @@ public class Hexagon {
 
         selected = true;
         this.anguloTunel = nAnguloTunel();
+
+        pared = app.loadImage("../data/pantallaJuego/hexagonos/pared.png");
     }
+
 
     private void selectHex(int tipoHex) {
         switch (tipoHex) {
@@ -99,6 +102,39 @@ public class Hexagon {
         }
 
         return 0;
+    }
+
+
+    public void pintarFront(float xCenter, float yCenter, PVector posJ) {
+        // varia la opacidad de acuerdo a la posicion del jugador
+        float d = app.dist(x, y, posJ.x, posJ.y);
+
+        // System.out.println(d);
+        opa = app.map(d, 0, 800, 200, 0);
+
+        x = xReal - xCenter;
+        y = yReal - yCenter;
+
+        app.fill(255);
+        //  dHexagon(x, y);
+
+        app.imageMode(app.CENTER);
+        app.pushMatrix();
+        app.translate(x, y);
+        app.rotate(((2 * app.PI) / 12) + ((2 * app.PI) / 6) * (anguloTunel + 0));
+
+        app.tint(255, vida);
+        app.image(pared, 0, 0);
+        app.noTint();
+
+        if (!selected) vida--;
+
+        app.popMatrix();
+
+    }
+
+    public int getTipoHex() {
+        return tipoHex;
     }
 
     public void pintar(float xCenter, float yCenter, PVector posJ) {
@@ -171,16 +207,14 @@ public class Hexagon {
             app.noStroke();
             dHexagon(x + xVecino, y + yVecino);
             app.fill(0);
-            //  System.out.println("el numero es este! " + numero);
-            app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(turno)[numero]], x + xVecino, y + yVecino);
-
-            if (recomendacion == numero)
-                app.text(
-                        "recomendacion!", x + xVecino + 50, y + yVecino);
-
+            app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[numero]], x + xVecino, y + yVecino);
+            app.text(numero, x + xVecino + 50, y + yVecino);
             numero++;
-
         }
+    }
+
+    public void setTipoHex(int tipoHex) {
+        this.tipoHex = tipoHex;
     }
 
     public Hexagon seleccionarVecino() {
@@ -202,8 +236,10 @@ public class Hexagon {
 
             if (app.dist(app.mouseX, app.mouseY, x + xVecino, y + yVecino) < ancho / 2) {
                 this.selected = false;
+
                 Hexagon h = new Hexagon(j, xReal + xVecino, yReal + yVecino, radio, 0, i);
-              //  System.out.println("se ha seleccionado, se supone!!!");
+                System.out.println("se ha seleccionado la puerta " + numero);
+                j.recomendacionOtroJugador = numero;
                 return h;
             }
 
@@ -233,7 +269,6 @@ public class Hexagon {
 
             j.sethSelected(h);
             j.getHexagons().add(h);
-            j.sethSelected(h);
             break;
         }
     }
@@ -257,5 +292,7 @@ public class Hexagon {
     public float getVida() {
         return vida;
     }
+
+
 }
 

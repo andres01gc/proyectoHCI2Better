@@ -7,6 +7,8 @@ import setup.Pantalla;
 public class Instrucciones extends Pantalla {
 
     private PImage fondo;
+    private int pantalla;
+    private PImage fondo2;
 
     @Override
     public void iniciar() {
@@ -18,28 +20,45 @@ public class Instrucciones extends Pantalla {
     @Override
     public void pintar() {
         app.fill(0);
-        app.image(fondo, 0, 0);
-        //	app.text("aqui deberian de ir las instrucciones", 50, 50);
-        // TODO Auto-generated method stub
 
+        switch (pantalla) {
+            case 0:
+                app.image(fondo, 0, 0);
+
+                break;
+
+            case 1:
+                app.image(fondo2, 0, 0);
+
+                break;
+
+
+        }
+        // TODO Auto-generated method stub
     }
 
     @Override
     public void finalizar() {
-
         // TODO Auto-generated method stub
-
     }
 
     public void inicializarImgs() {
         fondo = app.loadImage("../data/instrucciones/fondoins.png");
-
-
+        fondo2 = app.loadImage("../data/instrucciones/fondoins2.png");
     }
 
     @Override
     public void mousePressed() {
-        AdministradorPantalla.cambiarPantalla(new PantallaJuego());
+        switch (pantalla) {
+            case 0:
+                pantalla++;
+                break;
 
+            case 1:
+                AdministradorPantalla.cambiarPantalla(new PantallaJuego());
+                break;
+
+
+        }
     }
 }
