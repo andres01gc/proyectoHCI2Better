@@ -183,7 +183,7 @@ public class Hexagon {
 
     public void drawRecomendaciones(int turno, int recomendacion) {
         float angle = app.TWO_PI / 6;
-        
+
         for (int var = 0, numero = 0; var < datosHexSelected.get(tipoTunel).length; var++) {
             int i = datosHexSelected.get(tipoTunel)[var] + anguloTunel;
             if (i > 6)

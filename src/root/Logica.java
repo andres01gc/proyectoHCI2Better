@@ -3,6 +3,7 @@ package root;
 import info.Info;
 import pantallas.PantallaInicial;
 import processing.core.PApplet;
+import processing.core.PFont;
 import red.ComunicacionS;
 import red.ComunicacionC;
 import setup.AdministradorPantalla;
@@ -37,6 +38,8 @@ public class Logica {
             //JUGADOR CLIENT!
             ComunicacionS.getInstance();
 
+        PFont font = app.createFont("../data/font/SpaceMono-Bold.ttf", 32);
+        app.textFont(font);
     }
 
     public void pintar() {

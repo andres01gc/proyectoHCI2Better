@@ -120,8 +120,8 @@ public class PantallaJuego extends Pantalla {
         pintarHexagonosFront();
         pintaBarra();
 
-        app.fill(0);
-        app.text("ronda:  " + rondaActual, 100, 400);
+        app.fill(255);
+        app.text("Ronda  " + rondaActual, 1544, 103);
     }
 
 

@@ -37,6 +37,9 @@ public class Menu extends Interfaz implements Observer {
     private Table table;
     private TableRow newRow;
     private PImage imaFin;
+    private boolean otroJ;
+    private boolean resultadoYo;
+
 
     public Menu(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
@@ -141,7 +144,6 @@ public class Menu extends Interfaz implements Observer {
                 if (llaveCogida) p = new PVector(app.mouseX, app.mouseY);
                 app.image(llave, p.x, p.y);
 
-
                 app.text("el indice de confianza fue de: " + indiceConfianza, 100, 100);
                 //pintar barra de
 
@@ -155,9 +157,24 @@ public class Menu extends Interfaz implements Observer {
                 app.background(56, 68, 102);
                 app.imageMode(app.CORNER);
                 // System.out.println(j.cuartoSeleccionado + "       " + Info.respuestasCorrectas[j.getRondaActual()]);
-                if (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]) {
-                    System.out.println("respuesta correcta");
+                if (resultadoYo) {
+
+//                    System.out.println("respuesta correcta");
                     app.image(resultadoRonda[0], 0, 0);
+                    app.textAlign(app.CENTER, app.CENTER);
+
+                    if (resultadoYo && otroJ) {
+                        app.text("¡Tu compañero también escogió la llave correcta!, el beneficio se dividirá /n +10", app.width/2, 900);
+                    } else if (resultadoYo && !otroJ) {
+                        app.text("Solo tu tienes la llave correcta. Has ganado el total del beneficio +20", app.width, 900);
+                        app.text("", app.width, 800);
+
+                    } else if (!resultadoYo && otroJ) {
+                        app.text("Solo tu colega ha logrado obtener el beneficio +20 para él", app.width/2, 900);
+                    } else if (!resultadoYo && !otroJ) {
+                        app.text("Nadie tiene la llave correcta, el beneficio se destruirá ", app.width/2, 900);
+
+                    }
                 } else {
                     app.image(resultadoRonda[1], 0, 0);
                 }
@@ -187,7 +204,6 @@ public class Menu extends Interfaz implements Observer {
         app.noStroke();
 
         for (int i = 0; i < (indiceConfianza / 25); i++) {
-
             switch (i) {
                 case 0:
                     app.fill(206, 39, 0);
@@ -205,7 +221,6 @@ public class Menu extends Interfaz implements Observer {
                     app.fill(141, 206, 0);
                     break;
             }
-
             app.rect(303, 780 - (i * 125), 48, 112);
         }
     }
@@ -221,8 +236,8 @@ public class Menu extends Interfaz implements Observer {
         app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
 
         j.pintarRecomendaciones();
-
     }
+
 
     /**
      * Se encarga de Tomar la primera desicion
@@ -336,25 +351,38 @@ public class Menu extends Interfaz implements Observer {
                     envio("confianza:" + 0);
                 }
 
+
+                if (j.cuartoSeleccionado == Info.respuestasCorrectas[Info.rondaActual]) {
+                    envio("resultadoJugador:" + 1);
+                } else {
+                    envio("resultadoJugador:" + 0);
+                }
+
+
                 break;
             case 4:
                 pantalla++;
                 break;
 
             case 5:
-                //  pantalla++;
+
                 break;
 
 
             case 6:
-
-
                 if (Info.rondaActual < 3) {
                     Info.rondaActual++;
-
                     AdministradorPantalla.cambiarPantalla(new PantallaJuego());
                 } else {
                     pantalla = 7;
+
+                    if (Logica.getTipoJ() == 0) {
+                        app.saveTable(table, "../data/saves/datosS.csv");
+
+                        System.out.println("se supone que guarda!!");
+                    } else {
+                        app.saveTable(table, "../data/saves/datosC.csv");
+                    }
                 }
 
                 break;
@@ -393,7 +421,28 @@ public class Menu extends Interfaz implements Observer {
             case 5:
                 if (app.dist(app.mouseX, app.mouseY, posLlaveCogida.x, posLlaveCogida.y) < 100) {
                     llaveCogida = true;
+
+                    resultadoYo = (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]);
+
+
+                    if (resultadoYo && otroJ) {
+                        if (Logica.getTipoJ() == 0) {
+                            Info.vidaClient += 20;
+                        } else {
+                            Info.vidaServer += 20;
+                        }
+                    } else if (resultadoYo) {
+                        if (Logica.getTipoJ() == 0) {
+                            Info.vidaClient -= 10;
+                        } else {
+                            Info.vidaServer -= 10;
+                        }
+
+                    }
+
+
                 }
+
                 break;
 
 
@@ -427,14 +476,6 @@ public class Menu extends Interfaz implements Observer {
                         newRow.setInt("indiceConfianza R" + j.getRondaActual(), indiceConfianza);
 
                         //prueba de la primera ronda
-
-                        if (Logica.getTipoJ() == 0) {
-                            app.saveTable(table, "../data/saves/datosS.csv");
-
-                            System.out.println("se supone que guarda!!");
-                        } else {
-                            app.saveTable(table, "../data/saves/datosC.csv");
-                        }
                     }
                 }
                 llaveCogida = false;
@@ -477,10 +518,16 @@ public class Menu extends Interfaz implements Observer {
                 break;
 
             case "confianza":
-
                 indiceConfianza += Integer.parseInt(resp[1]);
-
                 break;
+
+
+            case "resultadoJugador":
+                if (Integer.parseInt(resp[1]) == 1) {
+                    otroJ = true;
+                }
+                break;
+
         }
     }
 }
