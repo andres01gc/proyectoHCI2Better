@@ -20,7 +20,7 @@ public class PantallaJuego extends Pantalla {
     float angle;
     int cantidadAleatorio = 2;
     int cantidadRondas = 4;//VARIABLE INDEPENDIENTE
-    int rondaActual = 1;
+    int rondaActual = 0;
 
     ArrayList<Hexagon> hexagons = new ArrayList<>();
 

@@ -225,7 +225,6 @@ public class Hexagon {
             if (i > 6)
                 i -= 6;
 
-
             // bloquea seleccionar las misma por la que entraste.
             if (i == ladoEntrada)
                 continue;
@@ -233,10 +232,8 @@ public class Hexagon {
             float xVecino = app.cos(angle * i) * ancho;
             float yVecino = app.sin(angle * i) * ancho;
 
-
             if (app.dist(app.mouseX, app.mouseY, x + xVecino, y + yVecino) < ancho / 2) {
                 this.selected = false;
-
                 Hexagon h = new Hexagon(j, xReal + xVecino, yReal + yVecino, radio, 0, i);
                 System.out.println("se ha seleccionado la puerta " + numero);
                 j.cuartoSeleccionado = numero;

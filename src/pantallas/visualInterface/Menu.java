@@ -32,6 +32,8 @@ public class Menu extends Interfaz implements Observer {
     PImage[] resultadoRonda;
     private PImage esperando;
 
+    private int indiceConfianza = 0;
+
     public Menu(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
     }
@@ -110,20 +112,32 @@ public class Menu extends Interfaz implements Observer {
                 PVector p = posLlaveCogida;
                 if (llaveCogida) p = new PVector(app.mouseX, app.mouseY);
                 app.image(llave, p.x, p.y);
+
+                app.text("el indice de confianza fue de: " + indiceConfianza, 100, 100);
                 break;
 
             //cuando gana
             case 6:
                 app.imageMode(app.CORNER);
+
+
+                System.out.println(j.cuartoSeleccionado + "       " + Info.respuestasCorrectas[j.getRondaActual()]);
                 if (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]) {
+
+                    System.out.println("respuesta correcta");
                     app.image(resultadoRonda[0], 0, 0);
                 } else {
                     app.image(resultadoRonda[1], 0, 0);
                 }
                 break;
 
-            //cuando pierde
+            //pintar Barras de confianza
             case 7:
+
+                break;
+
+            case 8:
+
                 break;
         }
     }
@@ -169,6 +183,15 @@ public class Menu extends Interfaz implements Observer {
         }
     }
 
+    public void envio(String res) {
+        if (Logica.getTipoJ() == 1)
+            ComunicacionS.getInstance().enviar(res);
+
+        if (Logica.getTipoJ() == 0)
+            ComunicacionC.getInstance().enviar(res);
+
+
+    }
 
     void clickdUno() {
         for (int i = 0; i < 2; i++) {
@@ -178,12 +201,16 @@ public class Menu extends Interfaz implements Observer {
                 System.out.println(" se ha seleccionado la llave " + i);
                 dUnoSeleccionado = i;
 
-                //PRUEBA!
-                if (Logica.getTipoJ() == 1)
-                    ComunicacionS.getInstance().enviar("recomendacion:" + i);
+                envio("recomendacion:" + i);
 
-                if (Logica.getTipoJ() == 0)
-                    ComunicacionC.getInstance().enviar("recomendacion:" + i);
+
+                if (i == Info.respuestasCorrectas[j.getRondaActual()]) {
+                    envio("confianza:" + 25);
+                    indiceConfianza += 25;
+                } else {
+                    envio("confianza:" + 0);
+                }
+
 
                 //  j.setRecomendacionOtroJugador(i);
 
@@ -213,6 +240,15 @@ public class Menu extends Interfaz implements Observer {
 
             case 3:
                 if (j.selecnuevoCamino()) pantalla++;
+
+
+                if (j.cuartoSeleccionado == j.recomendacionOtroJugador) {
+                    envio("confianza:" + 25);
+                    indiceConfianza += 25;
+                } else {
+                    envio("confianza:" + 0);
+                }
+
                 break;
             case 4:
                 pantalla++;
@@ -221,7 +257,19 @@ public class Menu extends Interfaz implements Observer {
             case 5:
                 //  pantalla++;
                 break;
+
+
+            case 7:
+
+                pantalla++;
+                break;
+
+
+            case 8:
+
+                break;
         }
+
     }
 
     @Override
@@ -289,7 +337,7 @@ public class Menu extends Interfaz implements Observer {
 
     @Override
     public void KeyPressed() {
-        // turnoActual++;
+
     }
 
     @Override
@@ -299,7 +347,6 @@ public class Menu extends Interfaz implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("respC!");
         String res = (String) arg;
         String[] resp = res.split(":");
 
@@ -319,6 +366,12 @@ public class Menu extends Interfaz implements Observer {
                 recomendado = true;
                 decisionRecomendado = Integer.parseInt(resp[1]);
                 j.setRecomendacionOtroJugador(decisionRecomendado);
+                break;
+
+            case "confianza":
+
+                indiceConfianza += Integer.parseInt(resp[1]);
+
                 break;
         }
     }
