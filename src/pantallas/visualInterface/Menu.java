@@ -73,15 +73,18 @@ public class Menu extends Interfaz implements Observer {
         if (Logica.getTipoJ() == 0) {
             table = app.loadTable("../data/saves/datosS.csv", "header");
 
-        }else{
+        } else {
             table = app.loadTable("../data/saves/datosC.csv", "header");
         }
 
-        newRow = table.addRow();
+        newRow = table.addRow(table.addRow());
 
         newRow.setInt("id", table.getRowCount() - 1);
         newRow.setInt("energia inicial", j.energia);
 
+
+//        pantalla = 5;
+//        indiceConfianza = 100;
     }
 
     @Override
@@ -125,6 +128,8 @@ public class Menu extends Interfaz implements Observer {
                 break;
 
             case 5:
+                app.background(56, 68, 102);
+
                 app.imageMode(app.CORNER);
                 app.image(fondoPruebaSeleccion, 0, 0);
                 app.imageMode(app.CENTER);
@@ -133,32 +138,70 @@ public class Menu extends Interfaz implements Observer {
                 if (llaveCogida) p = new PVector(app.mouseX, app.mouseY);
                 app.image(llave, p.x, p.y);
 
+
                 app.text("el indice de confianza fue de: " + indiceConfianza, 100, 100);
+                //pintar barra de
+
+
+                pintarBarra();
+
                 break;
 
             //cuando gana
             case 6:
+                app.background(56, 68, 102);
                 app.imageMode(app.CORNER);
-
-
-                System.out.println(j.cuartoSeleccionado + "       " + Info.respuestasCorrectas[j.getRondaActual()]);
+                // System.out.println(j.cuartoSeleccionado + "       " + Info.respuestasCorrectas[j.getRondaActual()]);
                 if (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]) {
-
                     System.out.println("respuesta correcta");
                     app.image(resultadoRonda[0], 0, 0);
                 } else {
                     app.image(resultadoRonda[1], 0, 0);
                 }
+                app.rectMode(app.CENTER);
+                app.noStroke();
+
+                pintarBarra();
+
                 break;
 
             //pintar Barras de confianza
             case 7:
-
+                app.text("se acabo todo", 50, 50);
                 break;
 
             case 8:
 
                 break;
+        }
+
+    }
+
+    private void pintarBarra() {
+        app.rectMode(app.CENTER);
+        app.noStroke();
+
+        for (int i = 0; i < (indiceConfianza / 25); i++) {
+
+            switch (i) {
+                case 0:
+                    app.fill(206, 39, 0);
+                    break;
+
+                case 1:
+                    app.fill(206, 171, 0);
+                    break;
+
+                case 2:
+                    app.fill(206, 206, 0);
+                    break;
+
+                case 3:
+                    app.fill(141, 206, 0);
+                    break;
+            }
+
+            app.rect(303, 780 - (i * 125), 48, 112);
         }
     }
 
@@ -199,7 +242,6 @@ public class Menu extends Interfaz implements Observer {
 
             app.imageMode(app.CENTER);
             app.image(Info.imasLlavesMenu[val], x, y);
-
         }
     }
 
@@ -209,7 +251,6 @@ public class Menu extends Interfaz implements Observer {
 
         if (Logica.getTipoJ() == 0)
             ComunicacionC.getInstance().enviar(res);
-
 
     }
 
@@ -226,14 +267,12 @@ public class Menu extends Interfaz implements Observer {
 
                 if (i == Info.respuestasCorrectas[j.getRondaActual()]) {
                     envio("confianza:" + 25);
-                    newRow.setInt("Honestidad R"+j.getRondaActual(), 25);
+                    newRow.setInt("Honestidad R" + j.getRondaActual(), 25);
 
                     indiceConfianza += 25;
                 } else {
-                    newRow.setInt("Honestidad R"+j.getRondaActual(), 0);
-
+                    newRow.setInt("Honestidad R" + j.getRondaActual(), 0);
                     envio("confianza:" + 0);
-
                 }
 
 
@@ -245,6 +284,11 @@ public class Menu extends Interfaz implements Observer {
             }
         }
     }
+
+//    public void reiniciar(){
+//
+//
+//    }
 
     @Override
     public void mousePressed() {
@@ -266,13 +310,12 @@ public class Menu extends Interfaz implements Observer {
             case 3:
                 if (j.selecnuevoCamino()) pantalla++;
 
-
                 if (j.cuartoSeleccionado == j.recomendacionOtroJugador) {
                     envio("confianza:" + 25);
-                    newRow.setInt("conviccion R"+j.getRondaActual(), 25);
+                    newRow.setInt("conviccion R" + j.getRondaActual(), 25);
                     indiceConfianza += 25;
                 } else {
-                    newRow.setInt("conviccion R"+j.getRondaActual(), 0);
+                    newRow.setInt("conviccion R" + j.getRondaActual(), 0);
                     envio("confianza:" + 0);
                 }
 
@@ -286,9 +329,24 @@ public class Menu extends Interfaz implements Observer {
                 break;
 
 
+            case 6:
+
+
+//                pantalla = -1;
+//                ready = false;
+//                j.setRondaActual(j.getRondaActual() + 1);
+//                j.recomendacionOtroJugador = -1;
+//                indiceConfianza = 0;
+//                j.reiniciar();
+//
+//                if (j.getRondaActual() == 4) {
+//                    pantalla = 7;
+//                }
+
+                break;
             case 7:
 
-                pantalla++;
+                //  pantalla++;
                 break;
 
 
@@ -352,14 +410,15 @@ public class Menu extends Interfaz implements Observer {
                 if (llaveCogida) {
                     if (app.dist(app.mouseX, app.mouseY, 616, 616) < 100) {
                         pantalla = 6;
-                        newRow.setInt("indiceConfianza R"+j.getRondaActual(), indiceConfianza);
+                        newRow.setInt("indiceConfianza R" + j.getRondaActual(), indiceConfianza);
 
                         //prueba de la primera ronda
-                        
+
                         if (Logica.getTipoJ() == 0) {
                             app.saveTable(table, "../data/saves/datosS.csv");
 
-                        }else{
+                            System.out.println("se supone que guarda!!");
+                        } else {
                             app.saveTable(table, "../data/saves/datosC.csv");
                         }
                     }
@@ -367,8 +426,6 @@ public class Menu extends Interfaz implements Observer {
                 llaveCogida = false;
                 break;
         }
-
-
     }
 
 

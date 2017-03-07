@@ -15,7 +15,7 @@ import setup.AdministradorPantalla;
 import setup.Pantalla;
 
 public class PantallaJuego extends Pantalla {
-   public int energia = 80;
+    public int energia = 80;
     Jugador j;
     float angle;
     int cantidadAleatorio = 2;
@@ -76,10 +76,20 @@ public class PantallaJuego extends Pantalla {
             AdministradorPantalla.cambiarInterfaz(m);
         }
 
+
         crearMatrix(0, 0, 1, 1, 220);
         j = new Jugador(hexagons.get(0).getX(), hexagons.get(0).getY());
         hexaganoSeleccionado = hexagons.get(0);
         hexaganoSeleccionado.setSelected(true);
+    }
+
+    public void reiniciar() {
+        decidir = false;
+        recomendacionOtroJugador = -1;
+        vidaHilo = false;
+        llaveCogida = false;
+        cuartoSeleccionado = -1;
+
     }
 
     public void pintar() {
@@ -176,6 +186,11 @@ public class PantallaJuego extends Pantalla {
         }
     }
 
+
+    public void setRondaActual(int rondaActual) {
+        this.rondaActual = rondaActual;
+    }
+
     public void llegarAseleccion() {
         if (!vidaHilo) {
             vidaHilo = true;
@@ -219,7 +234,6 @@ public class PantallaJuego extends Pantalla {
     public void mousePressed() {
 
 
-
     }
     //  cantidadAleatorio = 2;
 
@@ -239,6 +253,7 @@ public class PantallaJuego extends Pantalla {
         }
         return false;
     }
+
 
     public void pintarJugador() {
         j.seguir(hexaganoSeleccionado.getrPos());
