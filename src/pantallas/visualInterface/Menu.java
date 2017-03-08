@@ -312,7 +312,7 @@ public class Menu extends Interfaz implements Observer {
         app.image(d2, 915, 140);
 
         app.ellipse((app.width / 2), 150 + 23, 110, 110);
-        app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
+        app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(Info.rondaActual)[decisionRecomendado]], (app.width / 2), 150 + 23);
 
         j.pintarRecomendaciones();
         app.fill(255);
@@ -327,44 +327,31 @@ public class Menu extends Interfaz implements Observer {
     public void elegirRecomendacion() {
         app.noStroke();
         app.image(dUno, 543, 437);
-
         for (int i = 0; i < 2; i++) {
-
             int x = 792 + (i * 336), y = 593;
-
-            int val = Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[i];
+            int val = Info.getInstance().datossLlavesMenu.get(Info.rondaActual)[i];
             app.fill(255);
-
             app.strokeWeight(5);
-            if (val == Info.getInstance().respuestasCorrectas[j.getRondaActual()]) {
+            if (val == Info.getInstance().respuestasCorrectas[Info.rondaActual]) {
                 app.stroke(0, 255, 0);
             } else {
                 app.stroke(255, 0, 0);
             }
-
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
                 app.fill(45);
                 app.ellipse(x, y, 160, 160);
                 app.fill(255);
-
                 switch (i) {
                     case 0:
                         app.text("Deseo No Mentirle a mi colega", (app.width / 2), 900);
                         break;
-
                     case 1:
                         app.text("Quiero Mentirle a mi colega", (app.width / 2), 900);
                         break;
-
                 }
-
             }
-
-
             app.imageMode(app.CENTER);
             app.image(Info.imasLlavesMenu[val], x, y);
-
-
         }
     }
 
@@ -399,7 +386,6 @@ public class Menu extends Interfaz implements Observer {
 
                 pantalla++;
                 j.setDecidir(true);
-
 
                 if (Logica.getTipoJ() == 0) {
                     Info.vidaClient -= 10;
@@ -507,7 +493,7 @@ public class Menu extends Interfaz implements Observer {
             case 5:
                 if (app.dist(app.mouseX, app.mouseY, posLlaveCogida.x, posLlaveCogida.y) < 100) {
                     llaveCogida = true;
-                    resultadoYo = (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]);
+                    resultadoYo = (j.cuartoSeleccionado == Info.respuestasCorrectas[Info.rondaActual]);
                 }
 
                 break;
