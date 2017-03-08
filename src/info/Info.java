@@ -143,7 +143,6 @@ public class Info {
                 app.loadImage("data/pantallaJuego/hexagonos/aleatorio/1.png"),
                 app.loadImage("data/pantallaJuego/hexagonos/aleatorio/2.png")
         };
-
     }
 
     static public void iniciarHexDes() {
@@ -171,7 +170,6 @@ public class Info {
                 app.loadImage("data/pantallaJuego/hexagonos/llaves/ll3.png"),
                 app.loadImage("data/pantallaJuego/hexagonos/llaves/ll4.png")
         };
-
     }
 
     public static Info getInstance() {

@@ -221,7 +221,7 @@ public class Menu extends Interfaz implements Observer {
             pantalla = 10;
             envio("ganas:D");
 
-            finJuego=true;
+            finJuego = true;
             Info.getInstance().guardarDatos();
         }
 
@@ -315,7 +315,7 @@ public class Menu extends Interfaz implements Observer {
         app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
 
         j.pintarRecomendaciones();
-app.fill(255);
+        app.fill(255);
         app.text("¿Quieres confiar en lo que dijo tu colega o deseas valerte por tu cuenta? ", (app.width / 2), 900);
 
     }
@@ -338,16 +338,28 @@ app.fill(255);
             app.strokeWeight(5);
             if (val == Info.getInstance().respuestasCorrectas[j.getRondaActual()]) {
                 app.stroke(0, 255, 0);
-                app.text("Deseo no mentirle a mi colega", (app.width / 2), 900);
             } else {
                 app.stroke(255, 0, 0);
-                app.text("Deseo mentirle a mi colega", (app.width / 2), 900);
             }
 
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
                 app.fill(45);
                 app.ellipse(x, y, 160, 160);
+                app.fill(255);
+
+                switch (i) {
+                    case 0:
+                        app.text("Deseo No Mentirle a mi colega", (app.width / 2), 900);
+                        break;
+
+                    case 1:
+                        app.text("Quiero Mentirle a mi colega", (app.width / 2), 900);
+                        break;
+
+                }
+
             }
+
 
             app.imageMode(app.CENTER);
             app.image(Info.imasLlavesMenu[val], x, y);
