@@ -315,7 +315,7 @@ public class Menu extends Interfaz implements Observer {
         app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
 
         j.pintarRecomendaciones();
-
+app.fill(255);
         app.text("¿Quieres confiar en lo que dijo tu colega o deseas valerte por tu cuenta? ", (app.width / 2), 900);
 
     }
@@ -333,6 +333,7 @@ public class Menu extends Interfaz implements Observer {
             int x = 792 + (i * 336), y = 593;
 
             int val = Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[i];
+            app.fill(255);
 
             app.strokeWeight(5);
             if (val == Info.getInstance().respuestasCorrectas[j.getRondaActual()]) {

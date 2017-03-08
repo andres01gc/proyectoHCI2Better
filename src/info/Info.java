@@ -12,6 +12,7 @@ public class Info {
     static PApplet app = Pantalla.app;
     private static Info info;
 
+    private final int pareja = 0;
 
     public static int vidaClient = 70;
     public static int vidaServer = 90;
@@ -54,12 +55,8 @@ public class Info {
 
 
     public void cargarData() {
-        if (Logica.getTipoJ() == 0) {
-            table = app.loadTable("../data/saves/datosS.csv", "header");
+        table = app.loadTable("../data/saves/noborrar.csv", "header");
 
-        } else {
-            table = app.loadTable("../data/saves/datosC.csv", "header");
-        }
 
         newRow = table.addRow(table.addRow());
 
@@ -186,11 +183,10 @@ public class Info {
 
     public void guardarDatos() {
         if (Logica.getTipoJ() == 0) {
-            app.saveTable(table, "../data/saves/datosS.csv");
-
+            app.saveTable(table, app.sketchPath() + "/data/saves/datosS" + pareja + ".csv");
             System.out.println("se supone que guarda!!");
         } else {
-            app.saveTable(table, "../data/saves/datosC.csv");
+            app.saveTable(table, app.sketchPath() + "/data/saves/datosC" + pareja + ".csv");
         }
     }
 }
