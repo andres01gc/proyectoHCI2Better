@@ -326,6 +326,7 @@ public class Menu extends Interfaz implements Observer {
      */
     public void elegirRecomendacion() {
         app.noStroke();
+        
         app.image(dUno, 543, 437);
         for (int i = 0; i < 2; i++) {
             int x = 792 + (i * 336), y = 593;
