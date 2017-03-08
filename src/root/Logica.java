@@ -38,7 +38,7 @@ public class Logica {
             //JUGADOR CLIENT!
             ComunicacionS.getInstance();
 
-        PFont font = app.createFont("../data/font/SpaceMono-Bold.ttf", 32);
+        PFont font = app.createFont("../data/font/SpaceMono-Bold.ttf", 200);
         app.textFont(font);
     }
 

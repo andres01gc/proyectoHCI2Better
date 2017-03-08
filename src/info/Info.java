@@ -1,5 +1,8 @@
 package info;
 
+import processing.data.Table;
+import processing.data.TableRow;
+import root.Logica;
 import setup.Pantalla;
 import processing.core.*;
 
@@ -10,8 +13,8 @@ public class Info {
     private static Info info;
 
 
-    public static int vidaClient = 80;
-    public static int vidaServer = 30;
+    public static int vidaClient = 70;
+    public static int vidaServer = 90;
 
     public static int rondaActual = 0;
     public static PImage PLAYER;
@@ -31,6 +34,11 @@ public class Info {
     public static PImage barraVida;
     public static int[] respuestasCorrectas;
 
+    public static ArrayList<Integer> indicesConfianza = new ArrayList<>();
+
+    public static Table table;
+    public static TableRow newRow;
+
 
     public void iniDatosLlavesMenu() {
         //cada uno representa la combinacion de llaves, estas deberian de ser aleatorias pero sin repetir.
@@ -41,6 +49,31 @@ public class Info {
         datossLlavesMenu.add(new int[]{0, 1});
         datossLlavesMenu.add(new int[]{1, 0});
         respuestasCorrectas = new int[]{0, 1, 0, 1, 0};
+
+    }
+
+
+    public void cargarData() {
+        if (Logica.getTipoJ() == 0) {
+            table = app.loadTable("../data/saves/datosS.csv", "header");
+
+        } else {
+            table = app.loadTable("../data/saves/datosC.csv", "header");
+        }
+
+        newRow = table.addRow(table.addRow());
+
+        newRow.setInt("id", table.getRowCount() - 1);
+
+
+        int vida = 0;
+
+        if (Logica.getTipoJ() == 0) {
+            vida = Info.vidaClient;
+        } else {
+            vida = Info.vidaServer;
+        }
+        newRow.setInt("energia inicial", vida);
     }
 
     private Info() {
@@ -59,7 +92,10 @@ public class Info {
 
 
         iniciarLlavesMapa();
+
+        cargarData();
         barraVida = app.loadImage("../data/pantallaJuego/vida.png");
+
     }
 
     public void iniDatosHexRandom() {
@@ -148,4 +184,13 @@ public class Info {
         return info;
     }
 
+    public void guardarDatos() {
+        if (Logica.getTipoJ() == 0) {
+            app.saveTable(table, "../data/saves/datosS.csv");
+
+            System.out.println("se supone que guarda!!");
+        } else {
+            app.saveTable(table, "../data/saves/datosC.csv");
+        }
+    }
 }

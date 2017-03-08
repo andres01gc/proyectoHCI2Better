@@ -46,31 +46,59 @@ public class PantallaJuego extends Pantalla {
     public void pintaBarra() {
         app.noStroke();
         app.imageMode(app.CORNER);
-        float bufferBarra = app.map(energia, 0, 100, 0, 304);
+        float bufferBarra = app.map(energia, 0, 100, 0, 318);
 
-        if (energia <= 20) {
-            app.fill(244, 55, 55);
-        }
-
-        if (energia > 20) {
+        if (energia <= 25) {
+            app.fill(229, 52, 44);
+        } else if (energia < 50) {
+            app.fill(238, 118, 46);
+        } else if (energia < 75) {
             app.fill(247, 236, 52);
+        } else {
+            app.fill(112, 180, 61);
+
         }
 
-        if (energia > 80) {
-            app.fill(112, 108, 61);
-        }
         app.rectMode(app.CORNER);
-        app.rect(94, 67, bufferBarra, 71);
+        app.rect(112, 61, bufferBarra, 43);
         app.image(Info.getInstance().barraVida, 0, 0);
 
         app.fill(255);
-        app.text(energia+"%",246,106);
+        app.text(energia + "%", 91, 82);
+
+    }
+
+
+    public void pintarIndices() {
+        app.fill(255);
+        app.textSize(25);
+
+        app.textAlign(app.CORNER, app.CENTER);
+        app.text("indice Confianza:", 50, 964);
+
+        app.textAlign(app.CENTER, app.CENTER);
+        app.strokeWeight(2);
+
+        for (int i = 0; i < Info.indicesConfianza.size(); i++) {
+            app.textSize(40);
+            app.fill(0, 100);
+            app.stroke(255);
+            app.ellipse(400 + (i * 150), 964, 100, 100);
+            app.fill(255);
+            app.text(Info.indicesConfianza.get(i) + "%", 400 + (i * 150), +950);
+            app.textSize(12);
+            app.text("ronda " + (i+1), 400 + (i * 150), +980);
+
+
+        }
+
+
     }
 
     public void iniciar() {
         app.saveStrings("../data/saves/server.txt", new String[]{"hey", "holi", "hey"});
 
-        //inicializa la interfaz grafica de MENU!!!!
+      //  inicializa la interfaz grafica de MENU!!!!
 
         Menu m = new Menu(this);
 
@@ -107,7 +135,6 @@ public class PantallaJuego extends Pantalla {
         vidaHilo = false;
         llaveCogida = false;
         cuartoSeleccionado = -1;
-
     }
 
     public void pintar() {
@@ -122,9 +149,11 @@ public class PantallaJuego extends Pantalla {
 
         pintarHexagonosFront();
         pintaBarra();
-
+        pintarIndices();
         app.fill(255);
-        app.text("Ronda  " + rondaActual, 1544, 103);
+        app.textSize(40);
+
+        app.text("Ronda  " + (rondaActual+1), 1544, 103);
     }
 
 

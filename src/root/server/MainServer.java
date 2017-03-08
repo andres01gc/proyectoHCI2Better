@@ -37,7 +37,6 @@ public class MainServer extends PApplet {
 	 */
 
 	public void setup() {
-
 		Pantalla.app = this;
 		//app = this;
 		logica = new Logica(this, 0);

@@ -34,12 +34,21 @@ public class Menu extends Interfaz implements Observer {
     PImage[] resultadoRonda;
     private PImage esperando;
     private int indiceConfianza = 0;
-    private Table table;
-    private TableRow newRow;
+
     private PImage imaFin;
     private boolean otroJ;
     private boolean resultadoYo;
 
+    private PImage fondoBarras;
+
+    private PImage[] imageConfianza;
+    private PImage[] imageEnergia;
+
+    private PImage imaGanas,
+            imaPierdes;
+
+
+    boolean finJuego = false;
 
     public Menu(PantallaJuego pantallaJuego) {
         this.j = pantallaJuego;
@@ -50,9 +59,7 @@ public class Menu extends Interfaz implements Observer {
     public void iniciar() {
         iniImgs();
         app.imageMode(app.CORNER);
-
         posLlaveCogida = new PVector(1373, 765);
-
     }
 
     public void iniImgs() {
@@ -72,30 +79,33 @@ public class Menu extends Interfaz implements Observer {
 
 
         imaFin = app.loadImage("../data/pantallaJuego/final.png");
-        loadTable();
-    }
 
+        fondoBarras = app.loadImage("../data/pantallaJuego/barra/fondo.png");
 
-    public void loadTable() {
-        if (Logica.getTipoJ() == 0) {
-            table = app.loadTable("../data/saves/datosS.csv", "header");
-
-        } else {
-            table = app.loadTable("../data/saves/datosC.csv", "header");
+        imageConfianza = new PImage[]{
+                app.loadImage("../data/pantallaJuego/barra/c25.png"),
+                app.loadImage("../data/pantallaJuego/barra/c50.png"),
+                app.loadImage("../data/pantallaJuego/barra/c75.png"),
+                app.loadImage("../data/pantallaJuego/barra/c100.png"),
         }
 
-        newRow = table.addRow(table.addRow());
 
-        newRow.setInt("id", table.getRowCount() - 1);
-        newRow.setInt("energia inicial", j.energia);
+        ;
+        imageEnergia = new PImage[]{
+                app.loadImage("../data/pantallaJuego/barra/e25.png"),
+                app.loadImage("../data/pantallaJuego/barra/e50.png"),
+                app.loadImage("../data/pantallaJuego/barra/e75.png"),
+                app.loadImage("../data/pantallaJuego/barra/e100.png"),
+        };
 
-
-//        pantalla = 5;
-//        indiceConfianza = 100;
+        imaGanas = app.loadImage("../data/pantallaJuego/menu/ganas.png");
+        imaPierdes = app.loadImage("../data/pantallaJuego/menu/pierdes.png");
     }
+
 
     @Override
     public void pintar() {
+        app.textSize(15);
         app.translate(0, 0);
         app.imageMode(app.CORNER);
 
@@ -124,8 +134,6 @@ public class Menu extends Interfaz implements Observer {
 
             case 3:
                 pintarRecomendacion();
-
-
                 break;
 
             case 4:
@@ -135,7 +143,6 @@ public class Menu extends Interfaz implements Observer {
 
             case 5:
                 app.background(56, 68, 102);
-
                 app.imageMode(app.CORNER);
                 app.image(fondoPruebaSeleccion, 0, 0);
                 app.imageMode(app.CENTER);
@@ -147,82 +154,154 @@ public class Menu extends Interfaz implements Observer {
                 app.text("el indice de confianza fue de: " + indiceConfianza, 100, 100);
                 //pintar barra de
 
-
-                pintarBarra();
-
                 break;
 
-            //cuando gana
             case 6:
                 app.background(56, 68, 102);
                 app.imageMode(app.CORNER);
-                // System.out.println(j.cuartoSeleccionado + "       " + Info.respuestasCorrectas[j.getRondaActual()]);
                 if (resultadoYo) {
-
-//                    System.out.println("respuesta correcta");
                     app.image(resultadoRonda[0], 0, 0);
-                    app.textAlign(app.CENTER, app.CENTER);
+                    app.textAlign(app.CENTER);
 
-                    if (resultadoYo && otroJ) {
-                        app.text("¡Tu compañero también escogió la llave correcta!, el beneficio se dividirá /n +10", app.width/2, 900);
-                    } else if (resultadoYo && !otroJ) {
-                        app.text("Solo tu tienes la llave correcta. Has ganado el total del beneficio +20", app.width, 900);
-                        app.text("", app.width, 800);
-
-                    } else if (!resultadoYo && otroJ) {
-                        app.text("Solo tu colega ha logrado obtener el beneficio +20 para él", app.width/2, 900);
-                    } else if (!resultadoYo && !otroJ) {
-                        app.text("Nadie tiene la llave correcta, el beneficio se destruirá ", app.width/2, 900);
-
-                    }
                 } else {
                     app.image(resultadoRonda[1], 0, 0);
                 }
+
                 app.rectMode(app.CENTER);
                 app.noStroke();
 
-                pintarBarra();
+                if (resultadoYo && otroJ) {
+                    app.text("¡Tu compañero también escogió la llave correcta!, el beneficio se dividirá /n +10", app.width / 2, 950);
+                } else if (resultadoYo && !otroJ) {
+                    app.text("Solo tu tienes la llave correcta. Has ganado el total del beneficio +20", app.width / 2, 950);
+                    app.text("", app.width, 800);
+
+                } else if (!resultadoYo && otroJ) {
+                    app.text("Solo tu colega ha logrado obtener el beneficio +20 para él", app.width / 2, 950);
+                } else if (!resultadoYo && !otroJ) {
+                    app.text("Nadie tiene la llave correcta, el beneficio se destruirá ", app.width / 2, 950);
+                }
+
+                if (app.frameCount % 200 == 0) pantalla++;
 
                 break;
 
             //pintar Barras de confianza
             case 7:
-                app.imageMode(app.CORNER);
-                app.image(imaFin, 0, 0);
-
+                pintarBarrasDeconfianza();
                 break;
 
             case 8:
-
+                app.imageMode(app.CORNER);
+                app.image(imaFin, 0, 0);
                 break;
+//ganas
+            case 9:
+                app.imageMode(app.CORNER);
+                app.image(imaGanas, 0, 0);
+                break;
+//pierdes
+            case 10:
+                app.imageMode(app.CORNER);
+                app.image(imaPierdes, 0, 0);
+                break;
+
+
+        }
+
+        int vida = 0;
+
+        if (Logica.getTipoJ() == 0) {
+            vida = Info.vidaClient;
+        } else {
+            vida = Info.vidaServer;
+        }
+
+        if (vida <= 0 && !finJuego) {
+            pantalla = 10;
+            envio("ganas:D");
+
+            finJuego=true;
+            Info.getInstance().guardarDatos();
         }
 
     }
 
-    private void pintarBarra() {
-        app.rectMode(app.CENTER);
-        app.noStroke();
+    private void pintarBarrasDeconfianza() {
 
-        for (int i = 0; i < (indiceConfianza / 25); i++) {
-            switch (i) {
-                case 0:
-                    app.fill(206, 39, 0);
-                    break;
+        app.imageMode(app.CORNER);
+        app.image(fondoBarras, 0, 0);
 
-                case 1:
-                    app.fill(206, 171, 0);
-                    break;
+        switch (indiceConfianza) {
+            case 0:
+                app.image(imageConfianza[0], 0, 0);
+                break;
 
-                case 2:
-                    app.fill(206, 206, 0);
-                    break;
+            case 25:
+                app.image(imageConfianza[0], 0, 0);
+                break;
 
-                case 3:
-                    app.fill(141, 206, 0);
-                    break;
-            }
-            app.rect(303, 780 - (i * 125), 48, 112);
+            case 50:
+                app.image(imageConfianza[1], 0, 0);
+                break;
+
+            case 75:
+                app.image(imageConfianza[2], 0, 0);
+                break;
+            case 100:
+                app.image(imageConfianza[3], 0, 0);
+                break;
         }
+
+        int vida = 0;
+
+        if (Logica.getTipoJ() == 0) {
+            vida = Info.vidaClient;
+        } else {
+            vida = Info.vidaServer;
+        }
+
+
+        if (vida <= 25) {
+            app.image(imageEnergia[0], 0, 0);
+        } else if (vida > 25) {
+            app.image(imageEnergia[1], 0, 0);
+        } else if (vida > 50) {
+            app.image(imageEnergia[2], 0, 0);
+        } else if (vida > 75) {
+            app.image(imageEnergia[3], 0, 0);
+        }
+
+        app.fill(54, 51, 121);
+        app.textSize(100);
+        app.textAlign(app.CENTER);
+
+        app.text(indiceConfianza + "%", 1350, 619);
+        app.text(vida + "%", 580, 619);
+
+//        app.rectMode(app.CENTER);
+//        app.noStroke();
+//
+//        for (int i = 0; i < (indiceConfianza / 25); i++) {
+//            switch (i) {
+//                case 0:
+//                    app.fill(206, 39, 0);
+//                    break;
+//
+//                case 1:
+//                    app.fill(206, 171, 0);
+//                    break;
+//
+//                case 2:
+//                    app.fill(206, 206, 0);
+//                    break;
+//
+//                case 3:
+//                    app.fill(141, 206, 0);
+//                    break;
+//            }
+//            app.rect(303, 780 - (i * 125), 48, 112);
+//        }
     }
 
     private void pintarRecomendacion() {
@@ -236,6 +315,9 @@ public class Menu extends Interfaz implements Observer {
         app.image(Info.imasLlavesMenu[Info.getInstance().datossLlavesMenu.get(j.getRondaActual())[decisionRecomendado]], (app.width / 2), 150 + 23);
 
         j.pintarRecomendaciones();
+
+        app.text("¿Quieres confiar en lo que dijo tu colega o deseas valerte por tu cuenta? ", (app.width / 2), 900);
+
     }
 
 
@@ -255,8 +337,10 @@ public class Menu extends Interfaz implements Observer {
             app.strokeWeight(5);
             if (val == Info.getInstance().respuestasCorrectas[j.getRondaActual()]) {
                 app.stroke(0, 255, 0);
+                app.text("Deseo no mentirle a mi colega", (app.width / 2), 900);
             } else {
                 app.stroke(255, 0, 0);
+                app.text("Deseo mentirle a mi colega", (app.width / 2), 900);
             }
 
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
@@ -266,6 +350,8 @@ public class Menu extends Interfaz implements Observer {
 
             app.imageMode(app.CENTER);
             app.image(Info.imasLlavesMenu[val], x, y);
+
+
         }
     }
 
@@ -289,18 +375,14 @@ public class Menu extends Interfaz implements Observer {
                 envio("recomendacion:" + i);
 
 
-                if (i == Info.respuestasCorrectas[j.getRondaActual()]) {
+                if (i == Info.respuestasCorrectas[Info.rondaActual]) {
                     envio("confianza:" + 25);
-                    newRow.setInt("Honestidad R" + j.getRondaActual(), 25);
-
+                    Info.newRow.setInt("Honestidad R" + Info.rondaActual, 25);
                     indiceConfianza += 25;
                 } else {
-                    newRow.setInt("Honestidad R" + j.getRondaActual(), 0);
+                    Info.newRow.setInt("Honestidad R" + Info.rondaActual, 0);
                     envio("confianza:" + 0);
                 }
-
-
-                //  j.setRecomendacionOtroJugador(i);
 
                 pantalla++;
                 j.setDecidir(true);
@@ -317,14 +399,9 @@ public class Menu extends Interfaz implements Observer {
         }
     }
 
-//    public void reiniciar(){
-//
-//
-//    }
 
     @Override
     public void mousePressed() {
-        //   System.out.println("se ha presionado el mouseMenu");
         switch (pantalla) {
 
             case 0:
@@ -344,10 +421,10 @@ public class Menu extends Interfaz implements Observer {
 
                 if (j.cuartoSeleccionado == j.recomendacionOtroJugador) {
                     envio("confianza:" + 25);
-                    newRow.setInt("conviccion R" + j.getRondaActual(), 25);
+                    Info.newRow.setInt("conviccion R" + Info.rondaActual, 25);
                     indiceConfianza += 25;
                 } else {
-                    newRow.setInt("conviccion R" + j.getRondaActual(), 0);
+                    Info.newRow.setInt("conviccion R" + Info.rondaActual, 0);
                     envio("confianza:" + 0);
                 }
 
@@ -370,30 +447,26 @@ public class Menu extends Interfaz implements Observer {
 
 
             case 6:
-                if (Info.rondaActual < 3) {
-                    Info.rondaActual++;
-                    AdministradorPantalla.cambiarPantalla(new PantallaJuego());
-                } else {
-                    pantalla = 7;
 
-                    if (Logica.getTipoJ() == 0) {
-                        app.saveTable(table, "../data/saves/datosS.csv");
-
-                        System.out.println("se supone que guarda!!");
-                    } else {
-                        app.saveTable(table, "../data/saves/datosC.csv");
-                    }
-                }
+                //    pantalla++;
 
                 break;
             case 7:
-                app.exit();
-                //  pantalla++;
+
+                if (Info.rondaActual < 3) {
+                    Info.rondaActual++;
+                    Info.indicesConfianza.add(indiceConfianza);
+                    AdministradorPantalla.cambiarPantalla(new PantallaJuego());
+                } else {
+                    pantalla = 8;
+                    Info.getInstance().guardarDatos();
+
+                }
                 break;
 
 
             case 8:
-
+                app.exit();
                 break;
         }
 
@@ -421,26 +494,7 @@ public class Menu extends Interfaz implements Observer {
             case 5:
                 if (app.dist(app.mouseX, app.mouseY, posLlaveCogida.x, posLlaveCogida.y) < 100) {
                     llaveCogida = true;
-
                     resultadoYo = (j.cuartoSeleccionado == Info.respuestasCorrectas[j.getRondaActual()]);
-
-
-                    if (resultadoYo && otroJ) {
-                        if (Logica.getTipoJ() == 0) {
-                            Info.vidaClient += 20;
-                        } else {
-                            Info.vidaServer += 20;
-                        }
-                    } else if (resultadoYo) {
-                        if (Logica.getTipoJ() == 0) {
-                            Info.vidaClient -= 10;
-                        } else {
-                            Info.vidaServer -= 10;
-                        }
-
-                    }
-
-
                 }
 
                 break;
@@ -473,9 +527,52 @@ public class Menu extends Interfaz implements Observer {
                 if (llaveCogida) {
                     if (app.dist(app.mouseX, app.mouseY, 616, 616) < 100) {
                         pantalla = 6;
-                        newRow.setInt("indiceConfianza R" + j.getRondaActual(), indiceConfianza);
+                        Info.newRow.setInt("indiceConfianza R" + Info.rondaActual, indiceConfianza);
 
-                        //prueba de la primera ronda
+
+                        if (resultadoYo && otroJ) {
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient += 20;
+                            } else {
+                                Info.vidaServer += 20;
+                            }
+                        } else if (resultadoYo) {
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient -= 10;
+                            } else {
+                                Info.vidaServer -= 10;
+                            }
+                        }
+
+
+                        if (resultadoYo && otroJ) {
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient += 5;
+                            } else {
+                                Info.vidaServer += 5;
+                            }
+                        } else if (resultadoYo && !otroJ) {
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient += 10;
+                            } else {
+                                Info.vidaServer += 10;
+                            }
+                        } else if (!resultadoYo && otroJ) {
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient += -10;
+                            } else {
+                                Info.vidaServer += -10;
+                            }
+                        } else if (!resultadoYo && !otroJ) {
+
+                            if (Logica.getTipoJ() == 0) {
+                                Info.vidaClient += -10;
+                            } else {
+                                Info.vidaServer += -10;
+                            }
+                        }
+
+
                     }
                 }
                 llaveCogida = false;
@@ -525,6 +622,13 @@ public class Menu extends Interfaz implements Observer {
             case "resultadoJugador":
                 if (Integer.parseInt(resp[1]) == 1) {
                     otroJ = true;
+                }
+                break;
+
+            case "ganas":
+                if (Integer.parseInt(resp[1]) == 1) {
+                    //otroJ = true;
+                    pantalla = 9;
                 }
                 break;
 

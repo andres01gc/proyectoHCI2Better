@@ -9,12 +9,13 @@ public class Instrucciones extends Pantalla {
     private PImage fondo;
     private int pantalla;
     private PImage fondo2;
+    private PImage fondo3;
 
     @Override
     public void iniciar() {
         // TODO Auto-generated method stub
         inicializarImgs();
-        System.out.println("hey");
+      //  System.out.println("hey");
     }
 
     @Override
@@ -31,6 +32,10 @@ public class Instrucciones extends Pantalla {
                 app.image(fondo2, 0, 0);
 
                 break;
+            case 2:
+                app.image(fondo3, 0, 0);
+
+                break;
 
 
         }
@@ -45,6 +50,8 @@ public class Instrucciones extends Pantalla {
     public void inicializarImgs() {
         fondo = app.loadImage("../data/instrucciones/fondoins.png");
         fondo2 = app.loadImage("../data/instrucciones/fondoins2.png");
+        fondo3 = app.loadImage("../data/instrucciones/fondoins3.png");
+
     }
 
     @Override
@@ -55,7 +62,12 @@ public class Instrucciones extends Pantalla {
                 break;
 
             case 1:
+                pantalla++;
+                break;
+
+            case 2:
                 AdministradorPantalla.cambiarPantalla(new PantallaJuego());
+
                 break;
 
 
