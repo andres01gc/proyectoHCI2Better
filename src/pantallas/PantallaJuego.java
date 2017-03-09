@@ -123,9 +123,9 @@ public class PantallaJuego extends Pantalla {
 
 
         if (Logica.getTipoJ() == 0) {
-            energia = Info.vidaClient;
-        } else {
             energia = Info.vidaServer;
+        } else {
+            energia = Info.vidaClient;
         }
     }
 

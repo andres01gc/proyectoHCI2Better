@@ -12,10 +12,9 @@ public class Info {
     static PApplet app = Pantalla.app;
     private static Info info;
 
-    private final int pareja = 0;
-
-    public static int vidaClient = 70;
-    public static int vidaServer = 90;
+    private final int pareja = 6;
+    public static int vidaClient = 10;
+    public static int vidaServer = 10;
 
     public static int rondaActual = 0;
     public static PImage PLAYER;
@@ -45,10 +44,10 @@ public class Info {
         //cada uno representa la combinacion de llaves, estas deberian de ser aleatorias pero sin repetir.
         //el tamano del arreglo representa la cantidad de turnos.
         datossLlavesMenu = new ArrayList<int[]>();
+        datossLlavesMenu.add(new int[]{2, 1});
+        datossLlavesMenu.add(new int[]{1, 3});
+        datossLlavesMenu.add(new int[]{3, 0});
         datossLlavesMenu.add(new int[]{0, 1});
-        datossLlavesMenu.add(new int[]{1, 0});
-        datossLlavesMenu.add(new int[]{0, 1});
-        datossLlavesMenu.add(new int[]{1, 0});
         respuestasCorrectas = new int[]{0, 1, 0, 1, 0};
 
     }
@@ -100,6 +99,9 @@ public class Info {
         imasLlavesMenu = new PImage[]{
                 app.loadImage("../data/pantallaJuego/menu/d1/llaves/llave0.png"),
                 app.loadImage("../data/pantallaJuego/menu/d1/llaves/llave1.png"),
+                app.loadImage("../data/pantallaJuego/menu/d1/llaves/llave2.png"),
+                app.loadImage("../data/pantallaJuego/menu/d1/llaves/llave3.png"),
+
         };
 
         imasHexRandom = new PImage[]{

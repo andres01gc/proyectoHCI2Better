@@ -326,30 +326,33 @@ public class Menu extends Interfaz implements Observer {
      */
     public void elegirRecomendacion() {
         app.noStroke();
-        
+
         app.image(dUno, 543, 437);
         for (int i = 0; i < 2; i++) {
             int x = 792 + (i * 336), y = 593;
             int val = Info.getInstance().datossLlavesMenu.get(Info.rondaActual)[i];
             app.fill(255);
             app.strokeWeight(5);
-            if (val == Info.getInstance().respuestasCorrectas[Info.rondaActual]) {
-                app.stroke(0, 255, 0);
-            } else {
-                app.stroke(255, 0, 0);
-            }
+
+
             if (app.dist(app.mouseX, app.mouseY, x, y) < 168) {
                 app.fill(45);
-                app.ellipse(x, y, 160, 160);
-                app.fill(255);
-                switch (i) {
-                    case 0:
-                        app.text("Deseo No Mentirle a mi colega", (app.width / 2), 900);
-                        break;
-                    case 1:
-                        app.text("Quiero Mentirle a mi colega", (app.width / 2), 900);
-                        break;
+
+                if (i == Info.respuestasCorrectas[Info.rondaActual]) {
+                    app.stroke(0, 255, 0);
+                    app.ellipse(x, y, 160, 160);
+                    app.text("Deseo No Mentirle a mi colega", (app.width / 2), 900);
+
+
+                } else {
+                    app.stroke(255, 0, 0);
+                    app.ellipse(x, y, 160, 160);
+                    app.text("Quiero Mentirle a mi colega", (app.width / 2), 900);
+
                 }
+
+                app.fill(255);
+
             }
             app.imageMode(app.CENTER);
             app.image(Info.imasLlavesMenu[val], x, y);
@@ -388,11 +391,6 @@ public class Menu extends Interfaz implements Observer {
                 pantalla++;
                 j.setDecidir(true);
 
-                if (Logica.getTipoJ() == 0) {
-                    Info.vidaClient -= 10;
-                } else {
-                    Info.vidaServer -= 10;
-                }
 
                 break;
             }
@@ -529,22 +527,6 @@ public class Menu extends Interfaz implements Observer {
                         pantalla = 6;
                         Info.newRow.setInt("indiceConfianza R" + Info.rondaActual, indiceConfianza);
 
-
-                        if (resultadoYo && otroJ) {
-                            if (Logica.getTipoJ() == 0) {
-                                Info.vidaClient += 20;
-                            } else {
-                                Info.vidaServer += 20;
-                            }
-                        } else if (resultadoYo) {
-                            if (Logica.getTipoJ() == 0) {
-                                Info.vidaClient -= 10;
-                            } else {
-                                Info.vidaServer -= 10;
-                            }
-                        }
-
-
                         if (resultadoYo && otroJ) {
                             if (Logica.getTipoJ() == 0) {
                                 Info.vidaClient += 5;
@@ -564,15 +546,12 @@ public class Menu extends Interfaz implements Observer {
                                 Info.vidaServer += -10;
                             }
                         } else if (!resultadoYo && !otroJ) {
-
                             if (Logica.getTipoJ() == 0) {
                                 Info.vidaClient += -10;
                             } else {
                                 Info.vidaServer += -10;
                             }
                         }
-
-
                     }
                 }
                 llaveCogida = false;
@@ -583,7 +562,7 @@ public class Menu extends Interfaz implements Observer {
 
     @Override
     public void KeyPressed() {
-
+        if (app.key == 'G' || app.key == 'g') Info.getInstance().guardarDatos();
     }
 
     @Override
